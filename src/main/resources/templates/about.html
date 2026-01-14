@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 | 个人博客</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 关于页面特有样式 */
+        .about-hero {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .about-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .about-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #555;
+        }
+
+        .about-content {
+            padding: 80px 0;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .about-text h2 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .skills-section {
+            background-color: white;
+            padding: 60px 0;
+            margin-bottom: 80px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .skill-item {
+            text-align: center;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+
+        .skill-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .timeline-section {
+            padding: 60px 0;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #3498db;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+            width: 50%;
+            padding-right: 40px;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: auto;
+            padding-right: 0;
+            padding-left: 40px;
+        }
+
+        .timeline-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            transform: rotate(45deg);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: auto;
+            left: -10px;
+        }
+
+        .timeline-year {
+            position: absolute;
+            top: 0;
+            right: -80px;
+            background-color: #3498db;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .timeline-item:nth-child(even) .timeline-year {
+            right: auto;
+            left: -80px;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .timeline-content p {
+            color: #666;
+        }
+
+        .interests-section {
+            padding: 60px 0;
+        }
+
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .interest-item {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .interest-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .interest-icon {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+
+        .contact-cta {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 0;
+            margin-top: 60px;
+            border-radius: 15px;
+        }
+
+        .contact-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .contact-cta p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 992px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .about-image {
+                order: -1;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 0;
+            }
+
+            .timeline-item:nth-child(even) {
+                margin-left: 0;
+                padding-left: 70px;
+            }
+
+            .timeline-year {
+                left: 0;
+                right: auto;
+            }
+
+            .timeline-item:nth-child(even) .timeline-year {
+                left: 0;
+            }
+
+            .timeline-content::before {
+                left: -10px;
+                right: auto;
+            }
+
+            .timeline-item:nth-child(even) .timeline-content::before {
+                left: -10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .about-hero p {
+                font-size: 1.1rem;
+            }
+
+            .contact-cta h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 头部导航 -->
+<header>
+    <div class="container nav-container">
+        <a href="index.html" class="logo">个人<span>博客</span></a>
+
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <nav>
+            <ul id="navMenu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="article.html">文章</a></li>
+                <li><a href="about.html" class="active">关于</a></li>
+                <li><a href="contact.html">联系</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- 关于英雄区域 -->
+<section class="about-hero">
+    <div class="container">
+        <h1>关于我</h1>
+        <p>一名热爱技术与写作的全栈开发者，分享编程知识、工作效率技巧和生活感悟</p>
+    </div>
+</section>
+
+<!-- 关于内容 -->
+<section class="about-content container">
+    <div class="about-grid">
+        <div class="about-text">
+            <h2>你好，我是张三</h2>
+            <p>一名热爱技术与写作的全栈开发者。在这个快速变化的数字时代，我相信持续学习和分享是个人成长的最佳途径。</p>
+            <p>从2018年开始写博客，最初只是为了记录学习笔记，后来逐渐发展成为与更多人交流的平台。在这里，我分享编程知识、工作效率技巧和生活感悟。</p>
+            <p>我的技术栈涵盖了前端和后端开发，包括React、Vue、Node.js、Python等。我喜欢探索新技术，解决复杂问题，并将学习过程记录下来。</p>
+            <p>我相信技术不仅仅是工具，更是改变世界的强大力量。通过代码，我们可以创造有价值的产品，解决实际问题，让生活变得更美好。</p>
+        </div>
+        <div class="about-image">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1074&q=80" alt="关于我">
+        </div>
+    </div>
+
+    <!-- 技能部分 -->
+    <section class="skills-section">
+        <h2 class="section-title">我的技能</h2>
+        <div class="skills-grid">
+            <div class="skill-item">
+                <div class="skill-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>前端开发</h3>
+                <p>HTML5, CSS3, JavaScript, TypeScript, React, Vue.js, Next.js</p>
+            </div>
+
+            <div class="skill-item">
+                <div class="skill-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3>后端开发</h3>
+                <p>Node.js, Python, Express, Django, RESTful API, 数据库设计</p>
+            </div>
+
+            <div class="skill-item">
+                <div class="skill-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3>UI/UX设计</h3>
+                <p>Figma, Adobe XD, 响应式设计, 用户界面设计, 用户体验优化</p>
+            </div>
+
+            <div class="skill-item">
+                <div class="skill-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>开发工具</h3>
+                <p>Git, Docker, Webpack, Vite, CI/CD, 测试驱动开发</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 时间线部分 -->
+    <section class="timeline-section">
+        <h2 class="section-title">我的经历</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">2021 - 至今</div>
+                <div class="timeline-content">
+                    <h3>高级全栈开发工程师</h3>
+                    <p>在一家科技公司担任高级开发工程师，负责核心产品的架构设计和开发工作。带领小型团队完成多个重要项目。</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">2019 - 2021</div>
+                <div class="timeline-content">
+                    <h3>前端开发工程师</h3>
+                    <p>在一家互联网公司专注于前端开发，参与了多个大型Web应用的建设，积累了丰富的前端架构经验。</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">2018 - 2019</div>
+                <div class="timeline-content">
+                    <h3>开始写博客</h3>
+                    <p>创建个人博客，开始记录学习过程和项目经验。通过写作巩固知识，并与开发者社区交流。</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">2016 - 2018</div>
+                <div class="timeline-content">
+                    <h3>计算机科学硕士</h3>
+                    <p>在某大学攻读计算机科学硕士学位，专注于软件工程和人工智能方向。期间参与了多个学术研究项目。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 兴趣部分 -->
+    <section class="interests-section">
+        <h2 class="section-title">我的兴趣</h2>
+        <div class="interests-grid">
+            <div class="interest-item">
+                <div class="interest-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h3>摄影</h3>
+                <p>用镜头记录生活中的美好瞬间，特别喜欢风景和街头摄影。</p>
+            </div>
+
+            <div class="interest-item">
+                <div class="interest-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3>阅读</h3>
+                <p>热爱阅读技术书籍、科幻小说和心理学相关著作。</p>
+            </div>
+
+            <div class="interest-item">
+                <div class="interest-icon">
+                    <i class="fas fa-hiking"></i>
+                </div>
+                <h3>徒步旅行</h3>
+                <p>喜欢在大自然中徒步，探索未知的风景，感受自然的宁静。</p>
+            </div>
+
+            <div class="interest-item">
+                <div class="interest-icon">
+                    <i class="fas fa-chess"></i>
+                </div>
+                <h3>策略游戏</h3>
+                <p>享受策略类游戏的挑战，锻炼逻辑思维和决策能力。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系CTA -->
+    <div class="contact-cta">
+        <h2>想了解更多？</h2>
+        <p>如果你对我的经历、技能或博客内容感兴趣，欢迎随时联系我。我很乐意与你交流技术、职业发展或其他有趣的话题。</p>
+        <a href="contact.html" class="btn" style="background-color: white; color: #3498db;">联系我</a>
+    </div>
+</section>
+
+<!-- 页脚 -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>个人博客</h3>
+                <p>记录思考，分享知识，与志同道合者共同成长。</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-weibo"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="article.html">文章</a></li>
+                    <li><a href="about.html">关于</a></li>
+                    <li><a href="contact.html">联系</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>文章分类</h3>
+                <ul class="footer-links">
+                    <li><a href="#">技术</a></li>
+                    <li><a href="#">效率</a></li>
+                    <li><a href="#">生活</a></li>
+                    <li><a href="#">学习</a></li>
+                    <li><a href="#">健康</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>&copy; 2023 个人博客. 保留所有权利.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 移动端菜单切换
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navMenu = document.getElementById('navMenu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (navMenu.classList.contains('active')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    });
+
+    // 关闭移动端菜单当点击菜单项时
+    document.querySelectorAll('#navMenu a').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        });
+    });
+
+    // 技能项目动画
+    const skillItems = document.querySelectorAll('.skill-item, .interest-item');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    skillItems.forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = 'opacity 0.5s, transform 0.5s';
+        observer.observe(item);
+    });
+</script>
+</body>
+</html>
