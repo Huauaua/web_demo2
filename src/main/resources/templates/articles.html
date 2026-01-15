@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章总览 | 个人博客</title>
+  <link rel="stylesheet" href="../static/index.css" th:href="@{/index.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* 文章总览页面特有样式 */
+    .articles-hero {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 100px 0;
+      text-align: center;
+    }
+
+    .articles-hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .articles-hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      color: #555;
+    }
+
+    .articles-content {
+      padding: 80px 0;
+    }
+
+    .filter-section {
+      background-color: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 40px;
+    }
+
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .filter-header h2 {
+      font-size: 1.8rem;
+      color: #2c3e50;
+    }
+
+    .filter-reset {
+      color: #3498db;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-reset:hover {
+      color: #2980b9;
+    }
+
+    .filter-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .filter-group {
+      margin-bottom: 15px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .filter-select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      background-color: white;
+    }
+
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .filter-tag {
+      background-color: #ecf0f1;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-tag:hover {
+      background-color: #d5dbdd;
+    }
+
+    .filter-tag.active {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .articles-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3498db;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .year-section {
+      margin-bottom: 60px;
+    }
+
+    .year-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #3498db;
+    }
+
+    .year-title {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-right: 20px;
+    }
+
+    .year-count {
+      background-color: #3498db;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .month-section {
+      margin-bottom: 40px;
+    }
+
+    .month-title {
+      font-size: 1.5rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      padding-left: 10px;
+      border-left: 4px solid #3498db;
+    }
+
+    .article-list-item {
+      background-color: white;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .article-list-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .article-list-date {
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .article-date-day {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3498db;
+      line-height: 1;
+    }
+
+    .article-date-month {
+      font-size: 1rem;
+      color: #7f8c8d;
+      text-transform: uppercase;
+    }
+
+    .article-list-content {
+      flex: 1;
+    }
+
+    .article-list-title {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .article-list-excerpt {
+      color: #666;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .article-list-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+    }
+
+    .view-toggle {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+      background-color: white;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .view-btn {
+      padding: 10px 30px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #7f8c8d;
+      border-radius: 5px;
+      transition: all 0.3s;
+    }
+
+    .view-btn.active {
+      background-color: #3498db;
+      color: white;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 60px;
+    }
+
+    .page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: white;
+      color: #2c3e50;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .page-btn:hover {
+      background-color: #3498db;
+      color: white;
+      border-color: #3498db;
+    }
+
+    .page-btn.active {
+      background-color: #3498db;
+      color: white;
+      border-color: #3498db;
+    }
+
+    .page-ellipsis {
+      color: #7f8c8d;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 0;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      color: #ecf0f1;
+      margin-bottom: 20px;
+    }
+
+    .empty-state h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    .empty-state p {
+      color: #7f8c8d;
+      max-width: 500px;
+      margin: 0 auto 30px;
+    }
+
+    @media (max-width: 992px) {
+      .articles-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+
+      .articles-stats {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .articles-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .articles-hero p {
+        font-size: 1.1rem;
+      }
+
+      .article-list-item {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .article-list-date {
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .article-date-day {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .filter-options {
+        grid-template-columns: 1fr;
+      }
+
+      .articles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .view-toggle {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- 头部导航 -->
+<header>
+  <div class="container nav-container">
+    <a href="index.html" class="logo">个人<span>博客</span></a>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <nav>
+      <ul id="navMenu">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="articles.html" class="active">文章</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="contact.html">联系</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- 文章总览英雄区域 -->
+<section class="articles-hero">
+  <div class="container">
+    <h1>文章总览</h1>
+    <p>探索所有文章，按类别、时间或标签筛选，找到你感兴趣的内容。</p>
+  </div>
+</section>
+
+<!-- 文章总览内容 -->
+<section class="articles-content container">
+  <!-- 统计信息 -->
+  <div class="articles-stats">
+    <div class="stat-item">
+      <div class="stat-number">42</div>
+      <div class="stat-label">总文章数</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">6</div>
+      <div class="stat-label">分类</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">18</div>
+      <div class="stat-label">标签</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">2020</div>
+      <div class="stat-label">开始年份</div>
+    </div>
+  </div>
+
+  <!-- 筛选区域 -->
+<!--  <div class="filter-section">-->
+<!--    <div class="filter-header">-->
+<!--      <h2>筛选文章</h2>-->
+<!--      <button class="filter-reset" id="resetFilters">-->
+<!--        <i class="fas fa-redo"></i> 重置筛选-->
+<!--      </button>-->
+<!--    </div>-->
+
+<!--    <div class="filter-options">-->
+<!--      <div class="filter-group">-->
+<!--        <label for="categoryFilter">按分类</label>-->
+<!--        <select id="categoryFilter" class="filter-select">-->
+<!--          <option value="">所有分类</option>-->
+<!--          <option value="technology">技术</option>-->
+<!--          <option value="efficiency">效率</option>-->
+<!--          <option value="life">生活</option>-->
+<!--          <option value="learning">学习</option>-->
+<!--          <option value="health">健康</option>-->
+<!--          <option value="travel">旅行</option>-->
+<!--        </select>-->
+<!--      </div>-->
+
+<!--      <div class="filter-group">-->
+<!--        <label for="yearFilter">按年份</label>-->
+<!--        <select id="yearFilter" class="filter-select">-->
+<!--          <option value="">所有年份</option>-->
+<!--          <option value="2023">2023年</option>-->
+<!--          <option value="2022">2022年</option>-->
+<!--          <option value="2021">2021年</option>-->
+<!--          <option value="2020">2020年</option>-->
+<!--        </select>-->
+<!--      </div>-->
+
+<!--      <div class="filter-group">-->
+<!--        <label for="sortFilter">排序方式</label>-->
+<!--        <select id="sortFilter" class="filter-select">-->
+<!--          <option value="newest">最新优先</option>-->
+<!--          <option value="oldest">最早优先</option>-->
+<!--          <option value="popular">阅读量最多</option>-->
+<!--          <option value="title">按标题排序</option>-->
+<!--        </select>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="filter-tags">-->
+<!--      <span class="filter-tag active" data-tag="all">全部</span>-->
+<!--      <span class="filter-tag" data-tag="frontend">前端开发</span>-->
+<!--      <span class="filter-tag" data-tag="javascript">JavaScript</span>-->
+<!--      <span class="filter-tag" data-tag="typescript">TypeScript</span>-->
+<!--      <span class="filter-tag" data-tag="react">React</span>-->
+<!--      <span class="filter-tag" data-tag="vue">Vue</span>-->
+<!--      <span class="filter-tag" data-tag="productivity">生产力</span>-->
+<!--      <span class="filter-tag" data-tag="learning">学习方法</span>-->
+<!--      <span class="filter-tag" data-tag="travel">旅行</span>-->
+<!--      <span class="filter-tag" data-tag="photography">摄影</span>-->
+<!--    </div>-->
+<!--  </div>-->
+
+  <!-- 视图切换 -->
+  <div class="view-toggle">
+    <button class="view-btn active" id="gridViewBtn" style="margin-right: 300px;">
+      <i class="fas fa-th-large"></i> 网格视图
+    </button>
+    <button class="view-btn" id="listViewBtn">
+      <i class="fas fa-list"></i> 列表视图
+    </button>
+  </div>
+
+  <!-- 网格视图 -->
+  <div id="gridView" class="articles-view">
+    <h2 class="section-title">所有文章</h2>
+
+    <div class="blog-posts" th:if="${articles != null}">
+      <article class="post-card" th:each="article : ${articles}">
+        <div class="post-image">
+          <img th:src="${article.imageUrl}" th:alt="${article.title}" />
+        </div>
+        <div class="post-content">
+          <div class="post-meta">
+            <span class="post-date" th:text="${#temporals.format(article.publishDate, 'yyyy年MM月dd日')}"></span>
+            <span class="post-category" th:text="${article.category}"></span>
+          </div>
+          <h3 class="post-title" th:text="${article.title}"></h3>
+          <p class="post-excerpt" th:text="${article.excerpt}"></p>
+          <a th:href="@{'/articles/' + ${article.id}}" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </article>
+    </div>
+    
+    <div th:unless="${articles != null}" class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+      <h3>暂无文章</h3>
+      <p>当前没有可用的文章，请稍后再试。</p>
+    </div>
+  </div>
+
+  <!-- 列表视图 -->
+  <div id="listView" class="articles-view" style="display: none;">
+    <!-- 2023年 -->
+    <div class="year-section">
+      <div class="year-header">
+        <h3 class="year-title">2023年</h3>
+        <span class="year-count">15篇文章</span>
+      </div>
+
+      <!-- 10月 -->
+      <div class="month-section">
+        <h4 class="month-title">十月</h4>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">15</div>
+            <div class="article-date-month">Oct</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">现代前端开发趋势与思考</h3>
+            <p class="article-list-excerpt">探索2023年及以后的前端开发趋势，从框架演进到开发范式的变化，以及如何在这些变化中保持竞争力。</p>
+            <div class="article-list-meta">
+              <span>技术</span>
+              <span>阅读时间: 8分钟</span>
+              <span>标签: 前端开发, JavaScript, React</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">10</div>
+            <div class="article-date-month">Oct</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">提升工作效率的10个实用技巧</h3>
+            <p class="article-list-excerpt">在信息过载的时代，如何保持专注并高效完成工作？分享我实践过的10个有效方法，希望能对你有所帮助。</p>
+            <div class="article-list-meta">
+              <span>效率</span>
+              <span>阅读时间: 6分钟</span>
+              <span>标签: 生产力, 时间管理</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">05</div>
+            <div class="article-date-month">Oct</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">记录旅行的意义：摄影与文字的双重记忆</h3>
+            <p class="article-list-excerpt">旅行不仅仅是去到一个新地方，更是对自我认知的扩展。通过摄影和文字记录旅程，让记忆更加鲜活而深刻。</p>
+            <div class="article-list-meta">
+              <span>生活</span>
+              <span>阅读时间: 7分钟</span>
+              <span>标签: 旅行, 摄影</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <!-- 9月 -->
+      <div class="month-section">
+        <h4 class="month-title">九月</h4>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">28</div>
+            <div class="article-date-month">Sep</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">高效学习的方法论：从被动接收主动构建</h3>
+            <p class="article-list-excerpt">在学习新知识时，我们常常陷入被动接收信息的误区。本文将探讨如何转变为主动构建知识体系的学习者。</p>
+            <div class="article-list-meta">
+              <span>学习</span>
+              <span>阅读时间: 9分钟</span>
+              <span>标签: 学习方法, 知识管理</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">20</div>
+            <div class="article-date-month">Sep</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">Python数据分析入门与实践指南</h3>
+            <p class="article-list-excerpt">使用Python进行数据分析已成为现代职场的重要技能。本文将从基础概念到实际案例，带你快速入门数据分析。</p>
+            <div class="article-list-meta">
+              <span>技术</span>
+              <span>阅读时间: 12分钟</span>
+              <span>标签: Python, 数据分析</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">15</div>
+            <div class="article-date-month">Sep</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">远程工作者的健康管理策略</h3>
+            <p class="article-list-excerpt">随着远程工作成为常态，如何在工作与生活之间找到平衡，保持身心健康？分享我的实践经验。</p>
+            <div class="article-list-meta">
+              <span>健康</span>
+              <span>阅读时间: 7分钟</span>
+              <span>标签: 健康, 远程工作</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2022年 -->
+    <div class="year-section">
+      <div class="year-header">
+        <h3 class="year-title">2022年</h3>
+        <span class="year-count">20篇文章</span>
+      </div>
+
+      <!-- 8月 -->
+      <div class="month-section">
+        <h4 class="month-title">八月</h4>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">22</div>
+            <div class="article-date-month">Aug</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">TypeScript高级类型使用指南</h3>
+            <p class="article-list-excerpt">深入探讨TypeScript的高级类型特性，包括条件类型、映射类型和模板字面量类型，提升类型安全性和代码质量。</p>
+            <div class="article-list-meta">
+              <span>技术</span>
+              <span>阅读时间: 10分钟</span>
+              <span>标签: TypeScript, 前端开发</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        <div class="article-list-item">
+          <div class="article-list-date">
+            <div class="article-date-day">10</div>
+            <div class="article-date-month">Aug</div>
+          </div>
+          <div class="article-list-content">
+            <h3 class="article-list-title">如何建立个人知识管理系统</h3>
+            <p class="article-list-excerpt">在这个信息爆炸的时代，建立一个有效的个人知识管理系统至关重要。分享我的知识管理流程和工具选择。</p>
+            <div class="article-list-meta">
+              <span>效率</span>
+              <span>阅读时间: 8分钟</span>
+              <span>标签: 知识管理, 工具推荐</span>
+            </div>
+          </div>
+          <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 分页 -->
+  <div class="pagination">
+    <button class="page-btn">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <span class="page-ellipsis">...</span>
+    <button class="page-btn">8</button>
+    <button class="page-btn">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>个人博客</h3>
+        <p>记录思考，分享知识，与志同道合者共同成长。</p>
+        <div class="social-icons">
+          <a href="https://github.com/Huauaua"><i class="fab fa-github"></i></a>
+          <a href="https://space.bilibili.com/1510363956"><i class="fab fa-bilibili"></i></a>
+          <a href="https://www.douyin.com/user/MS4wLjABAAAAgGgFjnVD0Y1yVLXjYzv8_pq4UWxfalUZdTyQG0M4xw1HyrB6EEd4SEso6PPvQzsR"><i class="fab fa-tiktok"></i></a>
+          <a href="https://x.com/SteveBlock1145"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://weibo.com/u/7882179358"><i class="fab fa-weibo"></i></a>
+          <a href="https://www.linkedin.com/in/%E5%A4%A9%E7%83%81-%E9%83%91-9100b83a6/"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-section">
+        <h3>快速链接</h3>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="articles.html">文章</a></li>
+          <li><a href="about.html">关于</a></li>
+          <li><a href="contact.html">联系</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>热门分类</h3>
+        <ul class="footer-links">
+          <li><a href="#">前端开发</a></li>
+          <li><a href="#">JavaScript</a></li>
+          <li><a href="#">效率工具</a></li>
+          <li><a href="#">学习方法</a></li>
+          <li><a href="#">旅行摄影</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="copyright">
+      <p>&copy; 2023 个人博客. 保留所有权利.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 移动端菜单切换
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const navMenu = document.getElementById('navMenu');
+
+  mobileMenuBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    const icon = mobileMenuBtn.querySelector('i');
+    if (navMenu.classList.contains('active')) {
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-times');
+    } else {
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    }
+  });
+
+  // 关闭移动端菜单当点击菜单项时
+  document.querySelectorAll('#navMenu a').forEach(link => {
+    link.addEventListener('click', () => {
+      navMenu.classList.remove('active');
+      const icon = mobileMenuBtn.querySelector('i');
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    });
+  });
+
+  // 视图切换功能
+  const gridViewBtn = document.getElementById('gridViewBtn');
+  const listViewBtn = document.getElementById('listViewBtn');
+  const gridView = document.getElementById('gridView');
+  const listView = document.getElementById('listView');
+
+  gridViewBtn.addEventListener('click', () => {
+    gridViewBtn.classList.add('active');
+    listViewBtn.classList.remove('active');
+    gridView.style.display = 'block';
+    listView.style.display = 'none';
+  });
+
+  listViewBtn.addEventListener('click', () => {
+    listViewBtn.classList.add('active');
+    gridViewBtn.classList.remove('active');
+    listView.style.display = 'block';
+    gridView.style.display = 'none';
+  });
+
+  // 筛选功能
+  const resetFiltersBtn = document.getElementById('resetFilters');
+  const filterTags = document.querySelectorAll('.filter-tag');
+
+  resetFiltersBtn.addEventListener('click', () => {
+    // 重置下拉选择
+    document.getElementById('categoryFilter').value = '';
+    document.getElementById('yearFilter').value = '';
+    document.getElementById('sortFilter').value = 'newest';
+
+    // 重置标签筛选
+    filterTags.forEach(tag => {
+      if (tag.dataset.tag === 'all') {
+        tag.classList.add('active');
+      } else {
+        tag.classList.remove('active');
+      }
+    });
+
+    alert('筛选条件已重置');
+  });
+
+  // 标签筛选
+  filterTags.forEach(tag => {
+    tag.addEventListener('click', () => {
+      const tagValue = tag.dataset.tag;
+
+      if (tagValue === 'all') {
+        // 如果点击"全部"，则只激活此项，其他取消激活
+        filterTags.forEach(t => {
+          if (t.dataset.tag === 'all') {
+            t.classList.add('active');
+          } else {
+            t.classList.remove('active');
+          }
+        });
+      } else {
+        // 如果点击其他标签，确保"全部"取消激活
+        document.querySelector('.filter-tag[data-tag="all"]').classList.remove('active');
+
+        // 切换当前标签的激活状态
+        tag.classList.toggle('active');
+
+        // 检查是否还有激活的标签，如果没有则激活"全部"
+        const activeTags = document.querySelectorAll('.filter-tag.active');
+        if (activeTags.length === 0) {
+          document.querySelector('.filter-tag[data-tag="all"]').classList.add('active');
+        }
+      }
+
+      // 这里可以添加实际筛选逻辑
+      console.log('筛选标签:', getActiveTags());
+    });
+  });
+
+  // 获取激活的标签
+  function getActiveTags() {
+    const activeTags = [];
+    document.querySelectorAll('.filter-tag.active').forEach(tag => {
+      if (tag.dataset.tag !== 'all') {
+        activeTags.push(tag.dataset.tag);
+      }
+    });
+    return activeTags;
+  }
+
+  // 下拉筛选
+  document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+  document.getElementById('yearFilter').addEventListener('change', applyFilters);
+  document.getElementById('sortFilter').addEventListener('change', applyFilters);
+
+  function applyFilters() {
+    const category = document.getElementById('categoryFilter').value;
+    const year = document.getElementById('yearFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+    const tags = getActiveTags();
+
+    console.log('应用筛选:', { category, year, sort, tags });
+    // 这里可以添加实际筛选逻辑，比如AJAX请求或DOM过滤
+  }
+
+  // 分页按钮点击
+  document.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      // 移除所有active类
+      document.querySelectorAll('.page-btn').forEach(b => {
+        b.classList.remove('active');
+      });
+
+      // 如果是数字按钮，添加active类
+      if (!this.querySelector('i')) {
+        this.classList.add('active');
+      }
+
+      // 这里可以添加实际分页逻辑
+    });
+  });
+</script>
+</body>
+</html>

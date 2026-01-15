@@ -9,12 +9,5 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-    @GetMapping("/users")
-    public String getAllUsers() {
-        return userService.getUsers();
-    }
-    @PostMapping("/users")
-    public String addUser(String username) {
-        return userService.saveUsers(username);
-    }
+
 }

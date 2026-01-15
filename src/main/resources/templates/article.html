@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>现代前端开发趋势与思考 | 个人博客</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title th:text="${article.title} + ' | 个人博客'">文章详情 | 个人博客</title>
+    <link rel="stylesheet" href="../static/index.css" th:href="@{/index.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* 文章详情页特有样式 */
         .article-header {
@@ -221,100 +222,42 @@
 </header>
 
 <!-- 文章头部 -->
+<th:block th:if="${article != null}">
 <section class="article-header">
     <div class="container">
         <div class="article-meta">
-            <span class="article-date">2023年10月15日</span>
-            <span class="post-category">技术</span>
+            <span class="article-date" th:text="${#temporals.format(article.publishDate, 'yyyy年MM月dd日')}"></span>
+            <span class="post-category" th:text="${article.category}"></span>
         </div>
-        <h1 class="article-title">现代前端开发趋势与思考</h1>
+        <h1 class="article-title" th:text="${article.title}"></h1>
         <div class="article-author">
-            <span>作者: 张三</span>
+            <span th:text="'作者: ' + ${article.author}"></span>
         </div>
     </div>
 </section>
 
 <!-- 文章内容 -->
 <article class="article-content container">
-    <div class="article-body">
-        <p>在前端开发领域，变化是永恒的主题。从jQuery时代到现代前端框架的兴起，再到如今各种工具链和开发范式的演进，前端开发已经变得前所未有的复杂而强大。</p>
-
-        <p>2023年，我们看到了一些明显的趋势正在塑造前端开发的未来。这些趋势不仅关乎技术选择，更关乎开发体验、性能优化和团队协作。</p>
-
-        <h2>框架的收敛与选择</h2>
-
-        <p>React、Vue和Angular仍然是三大主流框架，但一个有趣的现象是：它们在某些方面正在趋同。React引入了Server Components，Vue 3的组合式API与React Hooks有着相似的理念，而Svelte则以其编译时优化独树一帜。</p>
-
-        <blockquote>
-            框架的选择不再是简单的技术决策，而是需要考虑团队技能、项目规模和长期维护的综合考量。
-        </blockquote>
-
-        <p>对于新项目，我的建议是：</p>
-
-        <ul>
-            <li>大型企业应用：考虑React或Angular</li>
-            <li>快速原型或中小型项目：Vue或Svelte可能是更好的选择</li>
-            <li>内容密集型网站：可以考虑Astro或Next.js的静态生成能力</li>
-        </ul>
-
-        <h2>TypeScript的普及</h2>
-
-        <p>TypeScript已经成为现代前端开发的事实标准。它提供的类型安全、更好的IDE支持和代码可维护性，使得即使是中小型项目也能从中受益。</p>
-
-        <pre>
-            <code>interface User {
-                      id: number;
-                      name: string;
-                      email: string;
-                    }
-
-                    function getUser(id: number): Promise <.User> {
-                      return fetch(`/api/users/${id}`).then(res => res.json());
-                    }
-            </code></pre>
-
-        <p>TypeScript的学习曲线并不陡峭，但能够显著提高代码质量和开发效率。对于新项目，我强烈建议从一开始就采用TypeScript。</p>
-
-        <h2>构建工具的演进</h2>
-
-        <p>Webpack长期以来是前端构建工具的首选，但Vite的出现改变了游戏规则。基于ES模块的按需编译，Vite提供了极快的冷启动和热更新速度。</p>
-
-        <p>对于大多数项目，我的推荐是：</p>
-
-        <ul>
-            <li>新项目：优先考虑Vite，享受其出色的开发体验</li>
-            <li>现有Webpack项目：如果构建速度成为瓶颈，可以考虑迁移到Vite</li>
-            <li>大型复杂项目：Webpack的成熟生态和插件系统可能更有优势</li>
-        </ul>
-
-        <h2>性能优化的新维度</h2>
-
-        <p>随着Core Web Vitals成为SEO的重要因素，性能优化从前端开发的可选项变成了必选项。现代的优化策略包括：</p>
-
-        <ol>
-            <li>代码分割和懒加载</li>
-            <li>图片和资源的优化</li>
-            <li>服务端渲染或静态生成</li>
-            <li>CDN和边缘计算的使用</li>
-        </ol>
-
-        <p>性能优化不再是开发完成后才考虑的事情，而应该贯穿整个开发过程。</p>
-
-        <h2>总结</h2>
-
-        <p>前端开发正在变得更加专业化和工程化。技术栈的选择越来越多，但核心原则不变：选择适合团队和项目的工具，保持学习的热情，关注用户体验。</p>
-
-        <p>未来的前端开发将更加注重开发体验、性能优化和跨平台能力。作为前端开发者，我们需要不断学习，但不必追逐每一个新潮流。理解底层原理，掌握核心技能，才能在变化中保持竞争力。</p>
+    <div class="article-body" th:utext="${article.content}">
     </div>
 
     <div class="article-tags">
-        <span class="tag">前端开发</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">TypeScript</span>
-        <span class="tag">React</span>
-        <span class="tag">Vue</span>
-        <span class="tag">性能优化</span>
+        <span class="tag" th:each="tag : ${article.tags}" th:text="${tag}"></span>
     </div>
+</article>
+</th:block>
+<th:block th:unless="${article != null}">
+<div class="container">
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <h3>文章未找到</h3>
+        <p>抱歉，您访问的文章不存在或已被删除。</p>
+        <a href="/articles" class="btn">返回文章列表</a>
+    </div>
+</div>
+</th:block>
 
     <div class="article-navigation">
         <a href="#" class="nav-link prev"><i class="fas fa-arrow-left"></i> 上一篇文章：提升工作效率的10个实用技巧</a>
@@ -376,10 +319,12 @@
                 <h3>个人博客</h3>
                 <p>记录思考，分享知识，与志同道合者共同成长。</p>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-weibo"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/Huauaua"><i class="fab fa-github"></i></a>
+                    <a href="https://space.bilibili.com/1510363956"><i class="fab fa-bilibili"></i></a>
+                    <a href="https://www.douyin.com/user/MS4wLjABAAAAgGgFjnVD0Y1yVLXjYzv8_pq4UWxfalUZdTyQG0M4xw1HyrB6EEd4SEso6PPvQzsR"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://x.com/SteveBlock1145"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://weibo.com/u/7882179358"><i class="fab fa-weibo"></i></a>
+                    <a href="https://www.linkedin.com/in/%E5%A4%A9%E7%83%81-%E9%83%91-9100b83a6/"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
 

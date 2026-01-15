@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>个人博客 | 分享与思考</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="static/index.css" th:href="@{/index.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -20,8 +20,8 @@
 
         <nav>
             <ul id="navMenu">
-                <li><a href="index.html" class="active">首页</a></li>
-                <li><a href="article.html">文章</a></li>
+                <li><a href="/" class="active">首页</a></li>
+                <li><a href="/articles">文章</a></li>
                 <li><a href="about.html">关于</a></li>
                 <li><a href="contact.html">联系</a></li>
             </ul>
@@ -35,7 +35,7 @@
         <h1 class="page-title">欢迎来到我的个人博客</h1>
         <p class="hero-text" style="margin-bottom: 20px">在这里，我分享关于技术、生活与思考的点滴。记录成长，探索未知，与志同道合的朋友一起交流进步。</p>
         <div class="hero-buttons">
-            <a href="#featured-posts" class="btn">阅读最新文章</a>
+            <a href="articles.html" class="btn">阅读最新文章</a>
         </div>
     </div>
 </section>
@@ -44,54 +44,28 @@
 <section class="container" id="featured-posts">
     <h2 class="section-title">推荐文章</h2>
 
-    <div class="blog-posts">
-        <!-- 文章1 -->
-        <article class="post-card">
+    <div class="blog-posts" th:if="${articles != null and #lists.size(articles) > 0}">
+        <article class="post-card" th:each="article : ${articles}">
             <div class="post-image">
-                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="编程思考">
+                <img th:src="${article.imageUrl}" th:alt="${article.title}" />
             </div>
             <div class="post-content">
                 <div class="post-meta">
-                    <span class="post-date">2023年10月15日</span>
-                    <span class="post-category">技术</span>
+                    <span class="post-date" th:text="${#temporals.format(article.publishDate, 'yyyy年MM月dd日')}"></span>
+                    <span class="post-category" th:text="${article.category}"></span>
                 </div>
-                <h3 class="post-title">现代前端开发趋势与思考</h3>
-                <p class="post-excerpt">探索2023年及以后的前端开发趋势，从框架演进到开发范式的变化，以及如何在这些变化中保持竞争力。</p>
-                <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                <h3 class="post-title" th:text="${article.title}"></h3>
+                <p class="post-excerpt" th:text="${article.excerpt}"></p>
+                <a th:href="@{'/articles/' + ${article.id}}" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
             </div>
         </article>
-
-        <!-- 文章2 -->
-        <article class="post-card">
-            <div class="post-image">
-                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="工作效率">
-            </div>
-            <div class="post-content">
-                <div class="post-meta">
-                    <span class="post-date">2023年10月10日</span>
-                    <span class="post-category">效率</span>
-                </div>
-                <h3 class="post-title">提升工作效率的10个实用技巧</h3>
-                <p class="post-excerpt">在信息过载的时代，如何保持专注并高效完成工作？分享我实践过的10个有效方法，希望能对你有所帮助。</p>
-                <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </article>
-
-        <!-- 文章3 -->
-        <article class="post-card">
-            <div class="post-image">
-                <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1169&q=80" alt="旅行摄影">
-            </div>
-            <div class="post-content">
-                <div class="post-meta">
-                    <span class="post-date">2023年10月5日</span>
-                    <span class="post-category">生活</span>
-                </div>
-                <h3 class="post-title">记录旅行的意义：摄影与文字的双重记忆</h3>
-                <p class="post-excerpt">旅行不仅仅是去到一个新地方，更是对自我认知的扩展。通过摄影和文字记录旅程，让记忆更加鲜活而深刻。</p>
-                <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </article>
+    </div>
+    <div th:unless="${articles != null and #lists.size(articles) > 0}" class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-file-alt"></i>
+        </div>
+        <h3>暂无文章</h3>
+        <p>当前没有可用的文章，请稍后再试。</p>
     </div>
 </section>
 
@@ -100,58 +74,32 @@
     <div class="container">
         <h2 class="section-title">所有文章</h2>
 
-        <div class="blog-posts">
-            <!-- 文章4 -->
-            <article class="post-card">
+        <div class="blog-posts" th:if="${articles != null and #lists.size(articles) > 0}">
+            <article class="post-card" th:each="article : ${articles}">
                 <div class="post-image">
-                    <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="学习思考">
+                    <img th:src="${article.imageUrl}" th:alt="${article.title}" />
                 </div>
                 <div class="post-content">
                     <div class="post-meta">
-                        <span class="post-date">2023年9月28日</span>
-                        <span class="post-category">学习</span>
+                        <span class="post-date" th:text="${#temporals.format(article.publishDate, 'yyyy年MM月dd日')}"></span>
+                        <span class="post-category" th:text="${article.category}"></span>
                     </div>
-                    <h3 class="post-title">高效学习的方法论：从被动接收主动构建</h3>
-                    <p class="post-excerpt">在学习新知识时，我们常常陷入被动接收信息的误区。本文将探讨如何转变为主动构建知识体系的学习者。</p>
-                    <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
-
-            <!-- 文章5 -->
-            <article class="post-card">
-                <div class="post-image">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80" alt="数据分析">
-                </div>
-                <div class="post-content">
-                    <div class="post-meta">
-                        <span class="post-date">2023年9月20日</span>
-                        <span class="post-category">技术</span>
-                    </div>
-                    <h3 class="post-title">Python数据分析入门与实践指南</h3>
-                    <p class="post-excerpt">使用Python进行数据分析已成为现代职场的重要技能。本文将从基础概念到实际案例，带你快速入门数据分析。</p>
-                    <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </article>
-
-            <!-- 文章6 -->
-            <article class="post-card">
-                <div class="post-image">
-                    <img src="https://images.unsplash.com/photo-1545235617-9465d2a55698?ixlib=rb-4.0.3&auto=format&fit=crop&w=1160&q=80" alt="健康生活">
-                </div>
-                <div class="post-content">
-                    <div class="post-meta">
-                        <span class="post-date">2023年9月15日</span>
-                        <span class="post-category">健康</span>
-                    </div>
-                    <h3 class="post-title">远程工作者的健康管理策略</h3>
-                    <p class="post-excerpt">随着远程工作成为常态，如何在工作与生活之间找到平衡，保持身心健康？分享我的实践经验。</p>
-                    <a href="article.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                    <h3 class="post-title" th:text="${article.title}"></h3>
+                    <p class="post-excerpt" th:text="${article.excerpt}"></p>
+                    <a th:href="@{'/articles/' + ${article.id}}" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
         </div>
+        <div th:unless="${articles != null and #lists.size(articles) > 0}" class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h3>暂无文章</h3>
+            <p>当前没有可用的文章，请稍后再试。</p>
+        </div>
 
-        <div class="pagination" style="margin-bottom: 60px", align="center">
-            <a href="#" class="btn btn-outline">加载更多文章</a>
+        <div class="pagination" style="margin-bottom: 60px" align="center">
+            <a href="/articles" class="btn btn-outline">加载更多文章</a>
         </div>
     </div>
 </section>
@@ -178,8 +126,8 @@
             <div class="footer-section">
                 <h3>快速链接</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">首页</a></li>
-                    <li><a href="article.html">文章</a></li>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/articles">文章</a></li>
                     <li><a href="about.html">关于</a></li>
                     <li><a href="contact.html">联系</a></li>
                 </ul>
