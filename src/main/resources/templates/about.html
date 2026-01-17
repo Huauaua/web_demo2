@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于我 | 个人博客</title>
-    <link rel="stylesheet" href="../static/index.css">
+    <link rel="stylesheet" href="/static/index.css" th:href="@{/index.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -302,7 +302,7 @@
 <!-- 头部导航 -->
 <header>
     <div class="container nav-container">
-        <a href="index.html" class="logo">个人<span>博客</span></a>
+        <a href="/" class="logo">个人<span>博客</span></a>
 
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
@@ -310,10 +310,10 @@
 
         <nav>
             <ul id="navMenu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="article.html">文章</a></li>
-                <li><a href="about.html" class="active">关于</a></li>
-                <li><a href="contact.html">联系</a></li>
+                <li><a href="/">首页</a></li>
+                <li><a href="/articles">文章</a></li>
+                <li><a href="/about" class="active">关于</a></li>
+                <li><a href="/contact">联系</a></li>
             </ul>
         </nav>
     </div>
@@ -460,7 +460,7 @@
     <div class="contact-cta">
         <h2>想了解更多？</h2>
         <p>如果你对我的经历、技能或博客内容感兴趣，欢迎随时联系我。我很乐意与你交流技术、职业发展或其他有趣的话题。</p>
-        <a href="contact.html" class="btn" style="background-color: white; color: #3498db;">联系我</a>
+        <a href="/contact" class="btn" style="background-color: white; color: #3498db;">联系我</a>
     </div>
 </section>
 
@@ -484,10 +484,10 @@
             <div class="footer-section">
                 <h3>快速链接</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">首页</a></li>
-                    <li><a href="article.html">文章</a></li>
-                    <li><a href="about.html">关于</a></li>
-                    <li><a href="contact.html">联系</a></li>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/article">文章</a></li>
+                    <li><a href="/about">关于</a></li>
+                    <li><a href="/contact">联系</a></li>
                 </ul>
             </div>
 

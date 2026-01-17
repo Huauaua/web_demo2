@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>联系我 | 个人博客</title>
-    <link rel="stylesheet" href="../static/index.css">
+    <link rel="stylesheet" href="/static/index.css" th:href="@{/index.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -240,11 +240,6 @@
             transition: max-height 0.3s, padding 0.3s;
         }
 
-        .faq-answer.active {
-            padding: 0 25px 25px;
-            max-height: 300px;
-        }
-
         .faq-answer p {
             color: #666;
             line-height: 1.7;
@@ -291,7 +286,7 @@
 <!-- 头部导航 -->
 <header>
     <div class="container nav-container">
-        <a href="index.html" class="logo">个人<span>博客</span></a>
+        <a href="/" class="logo">个人<span>博客</span></a>
 
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <i class="fas fa-bars"></i>
@@ -299,10 +294,10 @@
 
         <nav>
             <ul id="navMenu">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="article.html">文章</a></li>
-                <li><a href="about.html">关于</a></li>
-                <li><a href="contact.html" class="active">联系</a></li>
+                <li><a href="/">首页</a></li>
+                <li><a href="/articles">文章</a></li>
+                <li><a href="/about">关于</a></li>
+                <li><a href="/contact" class="active">联系</a></li>
             </ul>
         </nav>
     </div>
@@ -515,10 +510,10 @@
             <div class="footer-section">
                 <h3>快速链接</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">首页</a></li>
-                    <li><a href="article.html">文章</a></li>
-                    <li><a href="about.html">关于</a></li>
-                    <li><a href="contact.html">联系</a></li>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/article">文章</a></li>
+                    <li><a href="/about">关于</a></li>
+                    <li><a href="/contact">联系</a></li>
                 </ul>
             </div>
 

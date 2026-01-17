@@ -18,4 +18,15 @@ public class HomeController {
         model.addAttribute("articles", articleService.getAllArticles());
         return "index"; // 返回主页模板
     }
+    @GetMapping("/about")
+    public String about(Model model) {
+        model.addAttribute("articles", articleService.getAllArticles());
+        return "about";
+    }
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        model.addAttribute("articles", articleService.getAllArticles());
+        return "contact";
+    }
+
 }
