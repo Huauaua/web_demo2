@@ -78,4 +78,40 @@ public class ArticleController {
             return "redirect:/articles"; // 如果文章不存在，重定向到文章列表
         }
     }
+
+    // 显示写博客页面
+    @GetMapping("/write")
+    public String writeArticlePage(Model model) {
+        model.addAttribute("article", new Article());
+        return "write-article"; // 返回 write-article.html 模板
+    }
+    // 创建新文章
+    @PostMapping("/api/create")
+    @ResponseBody
+    public Article createArticle(@RequestBody Article article) {
+        return articleService.createArticle(article);
+    }
+
+    //todo: 添加修改文章的模板和功能
+
+    // 更新文章
+    @PutMapping("/api/update/{id}")
+    @ResponseBody
+    public Article updateArticle(@PathVariable Long id, @RequestBody Article article) {
+        return articleService.updateArticle(id, article);
+    }
+
+    // 删除文章
+    @DeleteMapping("/api/delete/{id}")
+    @ResponseBody
+    public boolean deleteArticle(@PathVariable Long id) {
+        return articleService.deleteArticle(id);
+    }
+
+    // 发布文章页面
+    @PostMapping("/publish")
+    public String publishArticle(Article article, Model model) {
+        Article savedArticle = articleService.createArticle(article);
+        return "redirect:/articles/" + savedArticle.getId();
+    }
 }
