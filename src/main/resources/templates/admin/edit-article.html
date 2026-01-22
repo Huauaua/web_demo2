@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑文章 - 后台管理</title>
+    <link rel="stylesheet" th:href="@{/index.css}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .admin-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .admin-nav {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+        
+        .admin-nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .admin-nav li {
+            display: inline;
+        }
+        
+        .admin-nav a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-nav a:hover {
+            background-color: #2980b9;
+        }
+        
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="text"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            background-color: #fadbd8;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1 th:if="${article.id != null}">编辑文章</h1>
+        <h1 th:unless="${article.id != null}">新建文章</h1>
+        <div>
+            <a href="/admin" class="btn btn-primary">返回后台首页</a>
+        </div>
+    </header>
+    
+    <div class="admin-container">
+        <nav class="admin-nav">
+            <ul>
+                <li><a href="/admin">仪表盘</a></li>
+                <li><a href="/admin/articles">文章管理</a></li>
+                <li th:if="${article.id != null}"><a th:href="@{'/admin/articles/edit/' + ${article.id}}">编辑文章</a></li>
+                <li><a href="/admin/articles/new">新建文章</a></li>
+            </ul>
+        </nav>
+        
+        <div th:if="${error}" class="error-message">
+            [[${error}]]
+        </div>
+        
+        <div class="form-container">
+            <h2 class="section-title" th:if="${article.id != null}">编辑文章</h2>
+            <h2 class="section-title" th:unless="${article.id != null}">新建文章</h2>
+            
+            <form th:object="${article}" th:action="${article.id != null ? '/admin/articles/update/' + article.id : '/admin/articles/create'}" method="post">
+                <div class="form-group">
+                    <label for="title">标题</label>
+                    <input type="text" id="title" th:field="*{title}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="author">作者</label>
+                    <input type="text" id="author" th:field="*{author}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category">分类</label>
+                    <input type="text" id="category" th:field="*{category}" placeholder="输入文章分类">
+                </div>
+                
+                <div class="form-group">
+                    <label for="tags">标签（多个标签用逗号分隔）</label>
+                    <input type="text" id="tags" th:field="*{tags}" placeholder="标签1,标签2,标签3" th:value="${article.tags != null ? #strings.listJoin(article.tags, ',') : ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="excerpt">摘要</label>
+                    <textarea id="excerpt" th:field="*{excerpt}" placeholder="文章摘要..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="imageUrl">封面图片链接</label>
+                    <input type="url" id="imageUrl" th:field="*{imageUrl}" placeholder="https://example.com/image.jpg">
+                </div>
+                
+                <div class="form-group">
+                    <label for="readTime">阅读时间（分钟）</label>
+                    <input type="number" id="readTime" th:field="*{readTime}" placeholder="预计阅读时间" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">内容</label>
+                    <textarea id="content" th:field="*{content}" placeholder="文章内容..." required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success" th:text="${article.id != null} ? '更新文章' : '发布文章'">提交</button>
+                    <a href="/admin/articles" class="btn btn-secondary">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
