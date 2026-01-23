@@ -16,4 +16,7 @@ public class Article {
     private LocalDateTime publishDate;
     private String imageUrl;
     private Integer readTime; // 阅读时间（分钟）
+
+    private String previousTitle;
+    private String nextTitle = null;
 }

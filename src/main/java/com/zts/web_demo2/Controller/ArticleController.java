@@ -71,12 +71,14 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String articleDetail(@PathVariable Long id, Model model) {
         Article article = articleService.getArticleById(id);
-        if (article != null) {
-            model.addAttribute("article", article);
-            return "article"; // 返回 article.html 模板
-        } else {
-            return "redirect:/articles"; // 如果文章不存在，重定向到文章列表
-        }
+        Article lastArticle = articleService.getArticleById(id - 1);
+        Article nextArticle = articleService.getArticleById(id + 1);
+        if(lastArticle != null) article.setPreviousTitle(lastArticle.getTitle());
+        else article.setPreviousTitle(null);
+        if(nextArticle != null) article.setNextTitle(nextArticle.getTitle());
+        else article.setNextTitle(null);
+        model.addAttribute("article", article);
+        return "article"; // 返回 article.html 模板
     }
 
     // 显示写博客页面
@@ -91,8 +93,6 @@ public class ArticleController {
     public Article createArticle(@RequestBody Article article) {
         return articleService.createArticle(article);
     }
-
-    //todo: 添加修改文章的模板和功能
 
     // 更新文章
     @PutMapping("/api/update/{id}")

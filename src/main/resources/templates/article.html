@@ -260,34 +260,36 @@
     </div>
 </th:block>
 
-<div class="article-navigation" th:if="${article.navigation}">
+<div class="article-navigation" th:if="${article}">
     <!-- 上一篇 -->
-    <a th:if="${article.navigation.previous}"
-       th:href="@{/article/{id}(id=${article.navigation.previous.id})}"
+    <a th:if="${article.id - 1} > 0"
+       th:href="@{/articles/{id}(id=${article.id - 1})}"
        class="nav-link prev">
         <i class="fas fa-arrow-left"></i>
-        上一篇文章：[[${article.navigation.previous.title}]]
+        上一篇文章：[[${article.previousTitle}]]
     </a>
-
-    <!-- 占位符 -->
-    <span th:unless="${article.navigation.previous}" class="nav-link prev disabled">
+    <!-- 上一篇不存在 -->
+    <a th:if="${article.id - 1} <= 0"
+       th:href="@{/articles/{id}(id=${article.id})}"
+       class="nav-link prev">
         <i class="fas fa-arrow-left"></i>
-        已经是第一篇了
-    </span>
+        上一篇文章：已经是第一篇文章了哦(●'◡'●)
+    </a>
 
     <!-- 下一篇 -->
-    <a th:if="${article.navigation.next}"
-       th:href="@{/article/{id}(id=${article.navigation.next.id})}"
+    <a th:if="${article.nextTitle != null}"
+       th:href="@{/articles/{id}(id=${article.id+1})}"
        class="nav-link next">
-        下一篇文章：[[${article.navigation.next.title}]]
+        下一篇文章：[[${article.nextTitle}]]
         <i class="fas fa-arrow-right"></i>
     </a>
-
-    <!-- 占位符 -->
-    <span th:unless="${article.navigation.next}" class="nav-link next disabled">
-        已经是最后一篇了
+    <!-- 下一篇不存在 -->
+    <a th:if="${article.nextTitle == null}"
+       th:href="@{/articles/{id}(id=${article.id})}"
+       class="nav-link next">
+        下一篇文章：已经是最后一篇文章了耶( •̀ ω •́ )y
         <i class="fas fa-arrow-right"></i>
-    </span>
+    </a>
 </div>
 
 <!-- 评论区域 -->
