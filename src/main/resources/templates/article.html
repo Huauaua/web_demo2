@@ -6,7 +6,7 @@
     <title th:text="${article.title} + ' | 个人博客'">文章详情 | 个人博客</title>
     <link rel="stylesheet" href="/static/index.css" th:href="@{/index.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <style>
         /* 文章详情页特有样式 */
         .article-header {
@@ -224,46 +224,71 @@
 
 <!-- 文章头部 -->
 <th:block th:if="${article != null}">
-<section class="article-header">
-    <div class="container">
-        <div class="article-meta">
-            <span class="article-date" th:text="${#temporals.format(article.publishDate, 'yyyy年MM月dd日')}"></span>
-            <span class="post-category" th:text="${article.category}"></span>
+    <section class="article-header">
+        <div class="container">
+            <div class="article-meta">
+                <span class="article-date" th:text="${#temporals.format(article.publishDate, 'yyyy年MM月dd日')}"></span>
+                <span class="post-category" th:text="${article.category}"></span>
+            </div>
+            <h1 class="article-title" th:text="${article.title}"></h1>
+            <div class="article-author">
+                <span th:text="'作者: ' + ${article.author}"></span>
+            </div>
         </div>
-        <h1 class="article-title" th:text="${article.title}"></h1>
-        <div class="article-author">
-            <span th:text="'作者: ' + ${article.author}"></span>
+    </section>
+
+    <!-- 文章内容 -->
+    <article class="article-content container">
+        <div class="article-body" th:utext="${article.content}">
         </div>
-    </div>
-</section>
 
-<!-- 文章内容 -->
-<article class="article-content container">
-    <div class="article-body" th:utext="${article.content}">
-    </div>
-
-    <div class="article-tags">
-        <span class="tag" th:each="tag : ${article.tags}" th:text="${tag}"></span>
-    </div>
-</article>
+        <div class="article-tags">
+            <span class="tag" th:each="tag : ${article.tags}" th:text="${tag}"></span>
+        </div>
+    </article>
 </th:block>
 <th:block th:unless="${article != null}">
-<div class="container">
-    <div class="empty-state">
-        <div class="empty-icon">
-            <i class="fas fa-file-alt"></i>
+    <div class="container">
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h3>文章未找到</h3>
+            <p>抱歉，您访问的文章不存在或已被删除。</p>
+            <a href="/articles" class="btn">返回文章列表</a>
         </div>
-        <h3>文章未找到</h3>
-        <p>抱歉，您访问的文章不存在或已被删除。</p>
-        <a href="/articles" class="btn">返回文章列表</a>
     </div>
-</div>
 </th:block>
 
-    <div class="article-navigation">
-        <a href="#" class="nav-link prev"><i class="fas fa-arrow-left"></i> 上一篇文章：提升工作效率的10个实用技巧</a>
-        <a href="#" class="nav-link next">下一篇文章：Python数据分析入门与实践指南 <i class="fas fa-arrow-right"></i></a>
-    </div>
+<div class="article-navigation" th:if="${article.navigation}">
+    <!-- 上一篇 -->
+    <a th:if="${article.navigation.previous}"
+       th:href="@{/article/{id}(id=${article.navigation.previous.id})}"
+       class="nav-link prev">
+        <i class="fas fa-arrow-left"></i>
+        上一篇文章：[[${article.navigation.previous.title}]]
+    </a>
+
+    <!-- 占位符 -->
+    <span th:unless="${article.navigation.previous}" class="nav-link prev disabled">
+        <i class="fas fa-arrow-left"></i>
+        已经是第一篇了
+    </span>
+
+    <!-- 下一篇 -->
+    <a th:if="${article.navigation.next}"
+       th:href="@{/article/{id}(id=${article.navigation.next.id})}"
+       class="nav-link next">
+        下一篇文章：[[${article.navigation.next.title}]]
+        <i class="fas fa-arrow-right"></i>
+    </a>
+
+    <!-- 占位符 -->
+    <span th:unless="${article.navigation.next}" class="nav-link next disabled">
+        已经是最后一篇了
+        <i class="fas fa-arrow-right"></i>
+    </span>
+</div>
 
 <!-- 评论区域 -->
 <section class="comments-section container">
@@ -295,7 +320,8 @@
                 <span class="comment-date">2023年10月16日</span>
             </div>
             <div class="comment-body">
-                <p>非常赞同文中关于TypeScript的观点。我们团队从去年开始全面转向TypeScript，虽然初期有一些学习成本，但长期来看大大减少了运行时错误，提高了代码的可维护性。</p>
+                <p>
+                    非常赞同文中关于TypeScript的观点。我们团队从去年开始全面转向TypeScript，虽然初期有一些学习成本，但长期来看大大减少了运行时错误，提高了代码的可维护性。</p>
             </div>
         </div>
 
@@ -305,7 +331,8 @@
                 <span class="comment-date">2023年10月15日</span>
             </div>
             <div class="comment-body">
-                <p>感谢分享！对于Vite和Webpack的选择，我们团队最近也在讨论。目前我们的大型项目还是使用Webpack，但新项目已经开始尝试Vite，开发体验确实提升了不少。</p>
+                <p>
+                    感谢分享！对于Vite和Webpack的选择，我们团队最近也在讨论。目前我们的大型项目还是使用Webpack，但新项目已经开始尝试Vite，开发体验确实提升了不少。</p>
             </div>
         </div>
     </div>
@@ -321,10 +348,12 @@
                 <div class="social-icons">
                     <a href="https://github.com/Huauaua"><i class="fab fa-github"></i></a>
                     <a href="https://space.bilibili.com/1510363956"><i class="fab fa-bilibili"></i></a>
-                    <a href="https://www.douyin.com/user/MS4wLjABAAAAgGgFjnVD0Y1yVLXjYzv8_pq4UWxfalUZdTyQG0M4xw1HyrB6EEd4SEso6PPvQzsR"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.douyin.com/user/MS4wLjABAAAAgGgFjnVD0Y1yVLXjYzv8_pq4UWxfalUZdTyQG0M4xw1HyrB6EEd4SEso6PPvQzsR"><i
+                            class="fab fa-tiktok"></i></a>
                     <a href="https://x.com/SteveBlock1145"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://weibo.com/u/7882179358"><i class="fab fa-weibo"></i></a>
-                    <a href="https://www.linkedin.com/in/%E5%A4%A9%E7%83%81-%E9%83%91-9100b83a6/"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.linkedin.com/in/%E5%A4%A9%E7%83%81-%E9%83%91-9100b83a6/"><i
+                            class="fab fa-linkedin"></i></a>
                 </div>
             </div>
 
@@ -374,7 +403,7 @@
     });
 
     // 评论表单处理
-    document.getElementById('commentForm').addEventListener('submit', function(e) {
+    document.getElementById('commentForm').addEventListener('submit', function (e) {
         e.preventDefault();
         alert('评论提交成功！感谢您的参与。');
         this.reset();
