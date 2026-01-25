@@ -41,7 +41,9 @@ public class ArticleServiceImpl implements ArticleService {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123");
             
             // 生成文章的slug
-            String slug = generateSlug(article.getTitle());
+            String baseSlug = generateSlug(article.getTitle());
+            // 确保slug在数据库中是唯一的
+            String slug = generateUniqueSlug(connection, baseSlug);
             
             // 插入文章
             String insertPostSql = "INSERT INTO posts (title, slug, excerpt, content, featured_image, reading_time_minutes, status, published_at, created_at) VALUES (?, ?, ?, ?, ?, ?, 'published', NOW(), NOW())";
@@ -269,7 +271,84 @@ public class ArticleServiceImpl implements ArticleService {
                 .trim()
                 .replaceAll("[\\s-]+", "-");
         
+        if (slug.isEmpty()) {
+            // 如果处理后slug为空，则使用默认值加上时间戳
+            slug = "untitled-" + System.currentTimeMillis();
+        }
+        
         return slug;
+    }
+    
+    private String generateUniqueSlug(Connection connection, String baseSlug) throws Exception {
+        String uniqueSlug = baseSlug;
+        int counter = 1;
+        
+        // 检查数据库中是否已存在相同的slug
+        while (isSlugExists(connection, uniqueSlug)) {
+            // 如果存在，则添加数字后缀
+            uniqueSlug = baseSlug + "-" + counter;
+            counter++;
+        }
+        
+        return uniqueSlug;
+    }
+    
+    private String generateUniqueSlugForCategory(Connection connection, String baseSlug) throws Exception {
+        String uniqueSlug = baseSlug;
+        int counter = 1;
+        
+        // 检查数据库中是否已存在相同的分类slug
+        while (isCategorySlugExists(connection, uniqueSlug)) {
+            // 如果存在，则添加数字后缀
+            uniqueSlug = baseSlug + "-" + counter;
+            counter++;
+        }
+        
+        return uniqueSlug;
+    }
+    
+    private String generateUniqueSlugForTag(Connection connection, String baseSlug) throws Exception {
+        String uniqueSlug = baseSlug;
+        int counter = 1;
+        
+        // 检查数据库中是否已存在相同的标签slug
+        while (isTagSlugExists(connection, uniqueSlug)) {
+            // 如果存在，则添加数字后缀
+            uniqueSlug = baseSlug + "-" + counter;
+            counter++;
+        }
+        
+        return uniqueSlug;
+    }
+    
+    private boolean isSlugExists(Connection connection, String slug) throws Exception {
+        String checkSql = "SELECT 1 FROM posts WHERE slug = ? LIMIT 1";
+        try (java.sql.PreparedStatement checkStatement = connection.prepareStatement(checkSql)) {
+            checkStatement.setString(1, slug);
+            try (java.sql.ResultSet resultSet = checkStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+    
+    private boolean isCategorySlugExists(Connection connection, String slug) throws Exception {
+        String checkSql = "SELECT 1 FROM categories WHERE slug = ? LIMIT 1";
+        try (java.sql.PreparedStatement checkStatement = connection.prepareStatement(checkSql)) {
+            checkStatement.setString(1, slug);
+            try (java.sql.ResultSet resultSet = checkStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+    
+    private boolean isTagSlugExists(Connection connection, String slug) throws Exception {
+        String checkSql = "SELECT 1 FROM tags WHERE slug = ? LIMIT 1";
+        try (java.sql.PreparedStatement checkStatement = connection.prepareStatement(checkSql)) {
+            checkStatement.setString(1, slug);
+            try (java.sql.ResultSet resultSet = checkStatement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
     }
 
     private void setArticleCategory(Connection connection, Long postId, String categoryName) throws Exception {
@@ -315,10 +394,14 @@ public class ArticleServiceImpl implements ArticleService {
         }
         
         // 创建新分类
+        String baseSlug = generateSlug(categoryName);
+        // 确保分类slug在数据库中是唯一的
+        String uniqueSlug = generateUniqueSlugForCategory(connection, baseSlug);
+        
         String insertSql = "INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)";
         try (java.sql.PreparedStatement insertStatement = connection.prepareStatement(insertSql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             insertStatement.setString(1, categoryName);
-            insertStatement.setString(2, generateSlug(categoryName));
+            insertStatement.setString(2, uniqueSlug);
             insertStatement.setString(3, categoryName);
             insertStatement.executeUpdate();
             
@@ -345,10 +428,14 @@ public class ArticleServiceImpl implements ArticleService {
         }
         
         // 创建新标签
+        String baseSlug = generateSlug(tagName);
+        // 确保标签slug在数据库中是唯一的
+        String uniqueSlug = generateUniqueSlugForTag(connection, baseSlug);
+        
         String insertSql = "INSERT INTO tags (name, slug) VALUES (?, ?)";
         try (java.sql.PreparedStatement insertStatement = connection.prepareStatement(insertSql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             insertStatement.setString(1, tagName);
-            insertStatement.setString(2, generateSlug(tagName));
+            insertStatement.setString(2, uniqueSlug);
             insertStatement.executeUpdate();
             
             try (java.sql.ResultSet generatedKeys = insertStatement.getGeneratedKeys()) {
