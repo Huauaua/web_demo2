@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class Article {
+    public static final String DEFAULT_IMAGE_URL = "https://example.com/default-image.jpg";
     private Long id;
     private String title;
     private String content;

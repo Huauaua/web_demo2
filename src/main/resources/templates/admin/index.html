@@ -181,15 +181,15 @@
         
         <div class="dashboard-stats">
             <div class="stat-card">
-                <div class="stat-number" th:text="${#lists.size(articles)}">0</div>
+                <div class="stat-number" th:text="${articleCount}">0</div>
                 <div class="stat-label">文章总数</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">8</div>
+                <div class="stat-number" th:text="${categoryCount}">0</div>
                 <div class="stat-label">分类数</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">24</div>
+                <div class="stat-number" th:text="${tagCount}">0</div>
                 <div class="stat-label">标签数</div>
             </div>
             <div class="stat-card">

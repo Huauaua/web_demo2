@@ -822,4 +822,64 @@ public class ArticleServiceImpl implements ArticleService {
             return new java.util.ArrayList<>();
         }
     }
+    
+    @Override
+    public int getArticleCount() {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
+            String sql = "SELECT COUNT(*) as count FROM posts WHERE status = 'published'";
+            
+            try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+                try (java.sql.ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getInt("count");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("获取文章总数失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+    
+    @Override
+    public int getCategoryCount() {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
+            String sql = "SELECT COUNT(*) as count FROM categories";
+            
+            try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+                try (java.sql.ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getInt("count");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("获取分类总数失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+    
+    @Override
+    public int getTagCount() {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
+            String sql = "SELECT COUNT(*) as count FROM tags";
+            
+            try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+                try (java.sql.ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getInt("count");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("获取标签总数失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
 }

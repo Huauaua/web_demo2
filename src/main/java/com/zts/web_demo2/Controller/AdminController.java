@@ -23,6 +23,9 @@ public class AdminController {
     public String adminHome(Model model) {
         List<Article> articles = articleService.getAllArticles();
         model.addAttribute("articles", articles);
+        model.addAttribute("articleCount", articleService.getArticleCount());
+        model.addAttribute("categoryCount", articleService.getCategoryCount());
+        model.addAttribute("tagCount", articleService.getTagCount());
         return "admin/index"; // 返回后台管理首页模板
     }
     
@@ -31,6 +34,9 @@ public class AdminController {
     public String articlesManagement(Model model) {
         List<Article> articles = articleService.getAllArticles();
         model.addAttribute("articles", articles);
+        model.addAttribute("articleCount", articleService.getArticleCount());
+        model.addAttribute("categoryCount", articleService.getCategoryCount());
+        model.addAttribute("tagCount", articleService.getTagCount());
         return "admin/articles"; // 返回文章管理页面模板
     }
     

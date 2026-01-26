@@ -19,4 +19,9 @@ public interface ArticleService {
     
     // 新增方法：删除文章
     boolean deleteArticle(Long id);
+    
+    // 统计相关方法
+    int getArticleCount();
+    int getCategoryCount();
+    int getTagCount();
 }
