@@ -62,9 +62,11 @@ public class AdminCommentController {
 
     // 批量操作：审核选中的评论
     @PostMapping("/batch/approve")
-    public String batchApproveComments(@RequestParam("ids") List<Long> ids) {
-        for (Long id : ids) {
-            commentService.approveComment(id);
+    public String batchApproveComments(@RequestParam(value = "ids", required = false) List<Long> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            for (Long id : ids) {
+                commentService.approveComment(id);
+            }
         }
         return "redirect:/admin/comments";
     }
@@ -72,9 +74,11 @@ public class AdminCommentController {
 
     // 批量操作：拒绝选中的评论
     @PostMapping("/batch/reject")
-    public String batchRejectComments(@RequestParam("ids") List<Long> ids) {
-        for (Long id : ids) {
-            commentService.rejectComment(id);
+    public String batchRejectComments(@RequestParam(value = "ids", required = false) List<Long> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            for (Long id : ids) {
+                commentService.rejectComment(id);
+            }
         }
         return "redirect:/admin/comments";
     }
@@ -82,9 +86,11 @@ public class AdminCommentController {
 
     // 批量操作：删除选中的评论
     @PostMapping("/batch/delete")
-    public String batchDeleteComments(@RequestParam("ids") List<Long> ids) {
-        for (Long id : ids) {
-            commentService.deleteComment(id);
+    public String batchDeleteComments(@RequestParam(value = "ids", required = false) List<Long> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            for (Long id : ids) {
+                commentService.deleteComment(id);
+            }
         }
         return "redirect:/admin/comments";
     }
