@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论管理 - 后台管理</title>
+    <link rel="stylesheet" th:href="@{/index.css}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .admin-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .admin-nav {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+        
+        .admin-nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .admin-nav li {
+            display: inline;
+        }
+        
+        .admin-nav a {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-nav a:hover {
+            background-color: #2980b9;
+        }
+        
+        .section-title {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 0.5rem;
+        }
+        
+        .actions-bar {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-info {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .status-spam {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .comment-content {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .checkbox-column {
+            width: 40px;
+            text-align: center;
+        }
+        
+        .batch-actions {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .batch-actions button {
+            margin-right: 0.5rem;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .pagination {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .page-link {
+            padding: 0.5rem 1rem;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        .page-link.active {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1>评论管理</h1>
+        <div>
+            <a href="/admin" class="btn btn-primary">返回后台首页</a>
+        </div>
+    </header>
+    
+    <div class="admin-container">
+        <nav class="admin-nav">
+            <ul>
+                <li><a href="/admin">仪表盘</a></li>
+                <li><a href="/admin/articles">文章管理</a></li>
+                <li><a href="/admin/articles/new">新建文章</a></li>
+                <li><a href="/admin/comments" class="active">评论管理</a></li>
+            </ul>
+        </nav>
+        
+        <div class="actions-bar">
+            <h2 class="section-title">评论列表</h2>
+            <div>
+                <form method="GET" style="display: inline;">
+                    <select name="status" onchange="this.form.submit()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-right: 1rem;">
+                        <option value="">所有状态</option>
+                        <option value="approved" th:selected="${param.status[0] == 'approved'}">已审核</option>
+                        <option value="pending" th:selected="${param.status[0] == 'pending'}">待审核</option>
+                        <option value="spam" th:selected="${param.status[0] == 'spam'}">垃圾评论</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        
+        <form method="post" action="/admin/comments/batch/delete" id="batchForm">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="checkbox-column">
+                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
+                        </th>
+                        <th>ID</th>
+                        <th>文章ID</th>
+                        <th>评论者</th>
+                        <th>邮箱</th>
+                        <th>网站</th>
+                        <th>内容</th>
+                        <th>状态</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(comments)}">
+                        <td colspan="10" class="text-center">暂无评论数据</td>
+                    </tr>
+                    <tr th:each="comment : ${comments}">
+                        <td class="checkbox-column">
+                            <input type="checkbox" name="ids" th:value="${comment.id}">
+                        </td>
+                        <td th:text="${comment.id}">1</td>
+                        <td th:text="${comment.postId}">1</td>
+                        <td th:text="${comment.authorName}">用户名</td>
+                        <td th:text="${comment.authorEmail}">邮箱</td>
+                        <td th:text="${comment.authorWebsite} ?: '-'">-</td>
+                        <td class="comment-content" th:title="${comment.content}" th:text="${#strings.abbreviate(comment.content, 50)}">评论内容</td>
+                        <td>
+                            <span th:class="'status-' + ${comment.status}" th:text="${comment.status == 'approved'} ? '已审核' : (${comment.status == 'pending'} ? '待审核' : '垃圾评论')"></span>
+                        </td>
+                        <td th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')}">时间</td>
+                        <td>
+                            <div th:switch="${comment.status}">
+                                <div th:case="'pending'">
+                                    <a th:href="@{'/admin/comments/approve/' + ${comment.id}}" class="btn btn-success" onclick="return confirm('确定要审核通过这条评论吗？')">审核</a>
+                                    <a th:href="@{'/admin/comments/reject/' + ${comment.id}}" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">拒绝</a>
+                                </div>
+                                <div th:case="'approved'">
+                                    <a th:href="@{'/admin/comments/reject/' + ${comment.id}}" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">标记垃圾</a>
+                                </div>
+                                <div th:case="'spam'">
+                                    <a th:href="@{'/admin/comments/approve/' + ${comment.id}}" class="btn btn-success" onclick="return confirm('确定要将这条评论恢复为已审核状态吗？')">恢复</a>
+                                </div>
+                            </div>
+                            <a th:href="@{'/admin/comments/delete/' + ${comment.id}}" class="btn btn-warning" onclick="return confirm('确定要删除这条评论吗？')">删除</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+        
+        <div class="batch-actions">
+            <h4>批量操作</h4>
+            <button type="button" class="btn btn-success" onclick="performBatchAction('/admin/comments/batch/approve')">审核选中</button>
+            <button type="button" class="btn btn-danger" onclick="performBatchAction('/admin/comments/batch/reject')">拒绝选中</button>
+            <button type="button" class="btn btn-warning" onclick="if(confirm('确定要删除选中的评论吗？')) performBatchAction('/admin/comments/batch/delete')">删除选中</button>
+        </div>
+        
+        <div class="pagination">
+            <a href="#" class="page-link active">1</a>
+            <a href="#" class="page-link">2</a>
+            <a href="#" class="page-link">3</a>
+            <a href="#" class="page-link">下一页</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleSelectAll() {
+            const checkboxes = document.querySelectorAll('input[name="ids"]');
+            const selectAllCheckbox = document.getElementById('selectAll');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        }
+        
+        function performBatchAction(actionUrl) {
+            const form = document.getElementById('batchForm');
+            form.action = actionUrl;
+            form.method = 'post';
+            form.submit();
+        }
+        
+        // 当选中任何复选框时，同步全选复选框的状态
+        document.querySelectorAll('input[name="ids"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allCheckboxes = document.querySelectorAll('input[name="ids"]');
+                const selectAllCheckbox = document.getElementById('selectAll');
+                const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
+                selectAllCheckbox.checked = allChecked;
+            });
+        });
+    </script>
+</body>
+</html>

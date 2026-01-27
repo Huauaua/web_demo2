@@ -1,7 +1,9 @@
 package com.zts.web_demo2.Controller;
 
 import com.zts.web_demo2.Entity.Article;
+import com.zts.web_demo2.Entity.Comment;
 import com.zts.web_demo2.Service.ArticleService;
+import com.zts.web_demo2.Service.CommentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,11 @@ import java.util.List;
 @RequestMapping("/articles")
 public class ArticleController {
     private final ArticleService articleService;
+    private final CommentService commentService;
 
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, CommentService commentService) {
         this.articleService = articleService;
+        this.commentService = commentService;
     }
 
     // 显示文章列表页面
@@ -78,6 +82,12 @@ public class ArticleController {
         if(nextArticle != null) article.setNextTitle(nextArticle.getTitle());
         else article.setNextTitle(null);
         model.addAttribute("article", article);
+        
+        // 添加评论数据
+        List<Comment> comments = commentService.getApprovedCommentsByPostId(id);
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentCount", comments.size());
+        
         return "article"; // 返回 article.html 模板
     }
 

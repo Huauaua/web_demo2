@@ -293,52 +293,57 @@
 </div>
 
 <!-- 评论区域 -->
+<th:block th:if="${article != null}">
 <section class="comments-section container">
-    <h3 class="section-title">评论</h3>
+    <h3 class="section-title">评论 (<span th:text="${commentCount}">0</span>)</h3>
 
     <div class="comment-form">
         <h4>发表评论</h4>
-        <form id="commentForm">
-            <div class="form-group">
-                <label for="name">姓名</label>
-                <input type="text" id="name" required>
+        <form th:action="@{/comments/submit}" method="post" id="commentForm">
+            <input type="hidden" name="postId" th:value="${article.id}" />
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="authorName">姓名 *</label>
+                    <input type="text" id="authorName" name="authorName" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="authorEmail">邮箱 *</label>
+                    <input type="email" id="authorEmail" name="authorEmail" required class="form-control">
+                </div>
             </div>
             <div class="form-group">
-                <label for="email">邮箱</label>
-                <input type="email" id="email" required>
+                <label for="authorWebsite">网站</label>
+                <input type="url" id="authorWebsite" name="authorWebsite" class="form-control" placeholder="https://yourwebsite.com">
             </div>
             <div class="form-group">
-                <label for="comment">评论内容</label>
-                <textarea id="comment" required></textarea>
+                <label for="content">评论内容 *</label>
+                <textarea id="content" name="content" required class="form-control"></textarea>
             </div>
             <button type="submit" class="btn">提交评论</button>
         </form>
     </div>
 
     <div class="comments-list">
-        <div class="comment">
+        <div class="comment" th:each="comment : ${comments}">
             <div class="comment-header">
-                <span class="comment-author">李四</span>
-                <span class="comment-date">2023年10月16日</span>
+                <span class="comment-author" th:text="${comment.authorName}">评论者</span>
+                <span class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy年MM月dd日 HH:mm')}">评论时间</span>
             </div>
             <div class="comment-body">
-                <p>
-                    非常赞同文中关于TypeScript的观点。我们团队从去年开始全面转向TypeScript，虽然初期有一些学习成本，但长期来看大大减少了运行时错误，提高了代码的可维护性。</p>
+                <p th:text="${comment.content}">评论内容</p>
+            </div>
+            <div class="comment-website" th:if="${comment.authorWebsite}">
+                <a th:href="${comment.authorWebsite}" target="_blank" rel="nofollow noopener">
+                    <i class="fas fa-link"></i> <span th:text="${comment.authorWebsite}"></span>
+                </a>
             </div>
         </div>
-
-        <div class="comment">
-            <div class="comment-header">
-                <span class="comment-author">王五</span>
-                <span class="comment-date">2023年10月15日</span>
-            </div>
-            <div class="comment-body">
-                <p>
-                    感谢分享！对于Vite和Webpack的选择，我们团队最近也在讨论。目前我们的大型项目还是使用Webpack，但新项目已经开始尝试Vite，开发体验确实提升了不少。</p>
-            </div>
+        <div th:if="${#lists.isEmpty(comments)}" class="no-comments">
+            <p>还没有评论，快来抢沙发吧！</p>
         </div>
     </div>
 </section>
+</th:block>
 
 <!-- 页脚 -->
 <footer>
@@ -405,11 +410,40 @@
     });
 
     // 评论表单处理
-    document.getElementById('commentForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        alert('评论提交成功！感谢您的参与。');
-        this.reset();
-    });
+    const commentForm = document.getElementById('commentForm');
+    if(commentForm) {
+        commentForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            
+            // 收集表单数据
+            const formData = new FormData(this);
+            const commentData = Object.fromEntries(formData);
+            
+            // 发送AJAX请求
+            fetch('/comments/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(commentData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data) {
+                    alert('评论提交成功！等待管理员审核后显示。');
+                    commentForm.reset();
+                    // 重新加载页面以显示新评论
+                    location.reload();
+                } else {
+                    alert('评论提交失败，请重试。');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('提交过程中出现错误，请重试。');
+            });
+        });
+    }
 
     // 关闭移动端菜单当点击菜单项时
     document.querySelectorAll('#navMenu a').forEach(link => {
