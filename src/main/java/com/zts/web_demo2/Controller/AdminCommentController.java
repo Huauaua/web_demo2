@@ -50,6 +50,7 @@ public class AdminCommentController {
         commentService.rejectComment(id);
         return "redirect:/admin/comments";
     }
+    
 
     // 删除评论
     @PostMapping("/delete/{id}")
@@ -57,6 +58,7 @@ public class AdminCommentController {
         commentService.deleteComment(id);
         return "redirect:/admin/comments";
     }
+    
 
     // 批量操作：审核选中的评论
     @PostMapping("/batch/approve")
@@ -66,6 +68,7 @@ public class AdminCommentController {
         }
         return "redirect:/admin/comments";
     }
+    
 
     // 批量操作：拒绝选中的评论
     @PostMapping("/batch/reject")
@@ -75,6 +78,7 @@ public class AdminCommentController {
         }
         return "redirect:/admin/comments";
     }
+    
 
     // 批量操作：删除选中的评论
     @PostMapping("/batch/delete")
@@ -84,4 +88,5 @@ public class AdminCommentController {
         }
         return "redirect:/admin/comments";
     }
+    
 }

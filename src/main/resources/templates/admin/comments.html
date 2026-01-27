@@ -278,17 +278,27 @@
                         <td>
                             <div th:switch="${comment.status}">
                                 <div th:case="'pending'">
-                                    <a th:href="@{'/admin/comments/approve/' + ${comment.id}}" class="btn btn-success" onclick="return confirm('确定要审核通过这条评论吗？')">审核</a>
-                                    <a th:href="@{'/admin/comments/reject/' + ${comment.id}}" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">拒绝</a>
+                                    <form th:action="@{'/admin/comments/approve/' + ${comment.id}}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-success" onclick="return confirm('确定要审核通过这条评论吗？')">审核</button>
+                                    </form>
+                                    <form th:action="@{'/admin/comments/reject/' + ${comment.id}}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">拒绝</button>
+                                    </form>
                                 </div>
                                 <div th:case="'approved'">
-                                    <a th:href="@{'/admin/comments/reject/' + ${comment.id}}" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">标记垃圾</a>
+                                    <form th:action="@{'/admin/comments/reject/' + ${comment.id}}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">标记垃圾</button>
+                                    </form>
                                 </div>
                                 <div th:case="'spam'">
-                                    <a th:href="@{'/admin/comments/approve/' + ${comment.id}}" class="btn btn-success" onclick="return confirm('确定要将这条评论恢复为已审核状态吗？')">恢复</a>
+                                    <form th:action="@{'/admin/comments/approve/' + ${comment.id}}" method="post" style="display: inline;">
+                                        <button type="submit" class="btn btn-success" onclick="return confirm('确定要将这条评论恢复为已审核状态吗？')">恢复</button>
+                                    </form>
                                 </div>
                             </div>
-                            <a th:href="@{'/admin/comments/delete/' + ${comment.id}}" class="btn btn-warning" onclick="return confirm('确定要删除这条评论吗？')">删除</a>
+                            <form th:action="@{'/admin/comments/delete/' + ${comment.id}}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-warning" onclick="return confirm('确定要删除这条评论吗？')">删除</button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
