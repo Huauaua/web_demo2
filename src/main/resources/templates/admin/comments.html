@@ -231,9 +231,9 @@
                 <form method="GET" style="display: inline;">
                     <select name="status" onchange="this.form.submit()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-right: 1rem;">
                         <option value="">所有状态</option>
-                        <option value="approved" th:selected="${param.status[0] == 'approved'}">已审核</option>
-                        <option value="pending" th:selected="${param.status[0] == 'pending'}">待审核</option>
-                        <option value="spam" th:selected="${param.status[0] == 'spam'}">垃圾评论</option>
+                        <option value="approved" th:selected="${param.status != null and param.status[0] == 'approved'}">已审核</option>
+                        <option value="pending" th:selected="${param.status != null and param.status[0] == 'pending'}">待审核</option>
+                        <option value="spam" th:selected="${param.status != null and param.status[0] == 'spam'}">垃圾评论</option>
                     </select>
                 </form>
             </div>
