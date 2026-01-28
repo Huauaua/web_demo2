@@ -24,4 +24,13 @@ public interface ArticleService {
     int getArticleCount();
     int getCategoryCount();
     int getTagCount();
+    
+    // 获取带有序号的文章列表
+    List<Article> getArticlesWithSequentialNumbers();
+    
+    // 根据当前文章ID获取上一篇文章
+    Article getPreviousArticleById(Long currentId);
+    
+    // 根据当前文章ID获取下一篇文章
+    Article getNextArticleById(Long currentId);
 }

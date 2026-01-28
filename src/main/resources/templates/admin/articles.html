@@ -210,6 +210,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>序号</th>
                     <th>ID</th>
                     <th>标题</th>
                     <th>摘要</th>
@@ -225,6 +226,7 @@
                     <td colspan="8" class="text-center">暂无文章数据</td>
                 </tr>
                 <tr th:each="article : ${articles}">
+                    <td th:text="${article.number}">1</td>
                     <td th:text="${article.id}">1</td>
                     <td th:text="${article.title}">文章标题</td>
                     <td th:text="${#strings.abbreviate(article.excerpt, 50)}">文章摘要</td>

@@ -204,6 +204,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>序号</th>
                         <th>ID</th>
                         <th>标题</th>
                         <th>作者</th>
@@ -214,6 +215,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="article : ${articles}">
+                        <td th:text="${article.number}">1</td>
                         <td th:text="${article.id}">1</td>
                         <td th:text="${article.title}">文章标题</td>
                         <td th:text="${article.author}">作者</td>

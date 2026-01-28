@@ -75,9 +75,9 @@ public class ArticleController {
     @GetMapping("/{id}")
     public String articleDetail(@PathVariable Long id, Model model) {
         Article article = articleService.getArticleById(id);
-        Article lastArticle = articleService.getArticleById(id - 1);
-        Article nextArticle = articleService.getArticleById(id + 1);
-        if(lastArticle != null) article.setPreviousTitle(lastArticle.getTitle());
+        Article prevArticle = articleService.getPreviousArticleById(id);
+        Article nextArticle = articleService.getNextArticleById(id);
+        if(prevArticle != null) article.setPreviousTitle(prevArticle.getTitle());
         else article.setPreviousTitle(null);
         if(nextArticle != null) article.setNextTitle(nextArticle.getTitle());
         else article.setNextTitle(null);

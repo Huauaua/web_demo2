@@ -21,7 +21,7 @@ public class AdminController {
     // 后台管理首页
     @GetMapping
     public String adminHome(Model model) {
-        List<Article> articles = articleService.getAllArticles();
+        List<Article> articles = articleService.getArticlesWithSequentialNumbers();
         model.addAttribute("articles", articles);
         model.addAttribute("articleCount", articleService.getArticleCount());
         model.addAttribute("categoryCount", articleService.getCategoryCount());
@@ -32,7 +32,7 @@ public class AdminController {
     // 文章管理页面
     @GetMapping("/articles")
     public String articlesManagement(Model model) {
-        List<Article> articles = articleService.getAllArticles();
+        List<Article> articles = articleService.getArticlesWithSequentialNumbers();
         model.addAttribute("articles", articles);
         model.addAttribute("articleCount", articleService.getArticleCount());
         model.addAttribute("categoryCount", articleService.getCategoryCount());

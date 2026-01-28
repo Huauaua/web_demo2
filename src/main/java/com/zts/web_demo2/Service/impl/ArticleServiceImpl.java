@@ -882,4 +882,157 @@ public class ArticleServiceImpl implements ArticleService {
         
         return 0;
     }
+    
+    @Override
+    public List<Article> getArticlesWithSequentialNumbers() {
+        List<Article> articles = getAllArticles();
+        
+        // 按发布时间倒序排列，并添加序号
+        for (int i = 0; i < articles.size(); i++) {
+            Article article = articles.get(i);
+            article.setNumber(i + 1); // 设置连续序号
+        }
+        
+        return articles;
+    }
+    
+    @Override
+    public Article getPreviousArticleById(Long currentId) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
+            // 查找发布时间早于当前文章且ID最大的文章（即上一篇文章）
+            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND published_at <= (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id != ? ORDER BY published_at DESC, post_id DESC LIMIT 1";
+            
+            try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, currentId);
+                statement.setLong(2, currentId);
+                
+                try (java.sql.ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Article article = new Article();
+                        article.setId(resultSet.getLong("post_id"));
+                        article.setTitle(resultSet.getString("title"));
+                        article.setContent(resultSet.getString("content"));
+                        article.setExcerpt(resultSet.getString("excerpt"));
+                        article.setAuthor("博主");
+                        
+                        // 获取文章分类
+                        try (java.sql.PreparedStatement categoryStmt = connection.prepareStatement(
+                            "SELECT c.name FROM categories c JOIN post_categories pc ON c.category_id = pc.category_id WHERE pc.post_id = ? LIMIT 1"
+                        )) {
+                            categoryStmt.setLong(1, resultSet.getLong("post_id"));
+                            
+                            try (java.sql.ResultSet categoryResult = categoryStmt.executeQuery()) {
+                                if (categoryResult.next()) {
+                                    article.setCategory(categoryResult.getString("name"));
+                                } else {
+                                    article.setCategory("未分类");
+                                }
+                            }
+                        }
+                        
+                        // 获取文章标签
+                        try (java.sql.PreparedStatement tagStmt = connection.prepareStatement(
+                            "SELECT GROUP_CONCAT(t.name) as tags FROM tags t JOIN post_tags pt ON t.tag_id = pt.tag_id WHERE pt.post_id = ?"
+                        )) {
+                            tagStmt.setLong(1, resultSet.getLong("post_id"));
+                            
+                            try (java.sql.ResultSet tagResult = tagStmt.executeQuery()) {
+                                if (tagResult.next()) {
+                                    String tagsStr = tagResult.getString("tags");
+                                    if (tagsStr != null && !tagsStr.isEmpty()) {
+                                        article.setTags(tagsStr.split(","));
+                                    } else {
+                                        article.setTags(new String[]{});
+                                    }
+                                } else {
+                                    article.setTags(new String[]{});
+                                }
+                            }
+                        }
+                        
+                        article.setPublishDate(resultSet.getObject("published_at", LocalDateTime.class));
+                        article.setImageUrl(resultSet.getString("featured_image"));
+                        article.setReadTime(resultSet.getInt("reading_time_minutes"));
+                        
+                        return article;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("查询上一篇文章失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    @Override
+    public Article getNextArticleById(Long currentId) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
+            // 查找发布时间晚于当前文章且ID最小的文章（即下一篇文章）
+            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND published_at >= (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id != ? ORDER BY published_at ASC, post_id ASC LIMIT 1";
+            
+            try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, currentId);
+                statement.setLong(2, currentId);
+                
+                try (java.sql.ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        Article article = new Article();
+                        article.setId(resultSet.getLong("post_id"));
+                        article.setTitle(resultSet.getString("title"));
+                        article.setContent(resultSet.getString("content"));
+                        article.setExcerpt(resultSet.getString("excerpt"));
+                        article.setAuthor("博主");
+                        
+                        // 获取文章分类
+                        try (java.sql.PreparedStatement categoryStmt = connection.prepareStatement(
+                            "SELECT c.name FROM categories c JOIN post_categories pc ON c.category_id = pc.category_id WHERE pc.post_id = ? LIMIT 1"
+                        )) {
+                            categoryStmt.setLong(1, resultSet.getLong("post_id"));
+                            
+                            try (java.sql.ResultSet categoryResult = categoryStmt.executeQuery()) {
+                                if (categoryResult.next()) {
+                                    article.setCategory(categoryResult.getString("name"));
+                                } else {
+                                    article.setCategory("未分类");
+                                }
+                            }
+                        }
+                        
+                        // 获取文章标签
+                        try (java.sql.PreparedStatement tagStmt = connection.prepareStatement(
+                            "SELECT GROUP_CONCAT(t.name) as tags FROM tags t JOIN post_tags pt ON t.tag_id = pt.tag_id WHERE pt.post_id = ?"
+                        )) {
+                            tagStmt.setLong(1, resultSet.getLong("post_id"));
+                            
+                            try (java.sql.ResultSet tagResult = tagStmt.executeQuery()) {
+                                if (tagResult.next()) {
+                                    String tagsStr = tagResult.getString("tags");
+                                    if (tagsStr != null && !tagsStr.isEmpty()) {
+                                        article.setTags(tagsStr.split(","));
+                                    } else {
+                                        article.setTags(new String[]{});
+                                    }
+                                } else {
+                                    article.setTags(new String[]{});
+                                }
+                            }
+                        }
+                        
+                        article.setPublishDate(resultSet.getObject("published_at", LocalDateTime.class));
+                        article.setImageUrl(resultSet.getString("featured_image"));
+                        article.setReadTime(resultSet.getInt("reading_time_minutes"));
+                        
+                        return article;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("查询下一篇文章失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
 }
