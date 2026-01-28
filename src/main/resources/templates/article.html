@@ -262,30 +262,30 @@
 
 <div class="article-navigation" th:if="${article}">
     <!-- 上一篇 -->
-    <a th:if="${article.id - 1} > 0"
-       th:href="@{/articles/{id}(id=${article.id - 1})}"
+    <a th:if="${article.previousArticle} != null"
+       th:href="@{/articles/{id}(id=${article.previousArticle.getId()})}"
        class="nav-link prev">
         <i class="fas fa-arrow-left"></i>
-        上一篇文章：[[${article.previousTitle}]]
+        上一篇文章：[[${article.previousArticle.getTitle()}]]
     </a>
     <!-- 上一篇不存在 -->
-    <a th:if="${article.id - 1} <= 0"
-       th:href="@{/articles/{id}(id=${article.id})}"
+    <a th:if="${article.previousArticle} == null"
+       th:href="@{/articles/{id}(id=${article.getId()})}"
        class="nav-link prev">
         <i class="fas fa-arrow-left"></i>
         上一篇文章：已经是第一篇文章了哦(●'◡'●)
     </a>
 
     <!-- 下一篇 -->
-    <a th:if="${article.nextTitle != null}"
-       th:href="@{/articles/{id}(id=${article.id+1})}"
+    <a th:if="${article.nextArticle} != null"
+       th:href="@{/articles/{id}(id=${article.nextArticle.getId()})}"
        class="nav-link next">
-        下一篇文章：[[${article.nextTitle}]]
+        下一篇文章：[[${article.nextArticle.getTitle()}]]
         <i class="fas fa-arrow-right"></i>
     </a>
     <!-- 下一篇不存在 -->
-    <a th:if="${article.nextTitle == null}"
-       th:href="@{/articles/{id}(id=${article.id})}"
+    <a th:if="${article.nextArticle} == null"
+       th:href="@{/articles/{id}(id=${article.getId()})}"
        class="nav-link next">
         下一篇文章：已经是最后一篇文章了耶( •̀ ω •́ )y
         <i class="fas fa-arrow-right"></i>
@@ -311,10 +311,10 @@
                     <input type="email" id="authorEmail" name="authorEmail" required class="form-control">
                 </div>
             </div>
-            <div class="form-group">
-                <label for="authorWebsite">网站</label>
-                <input type="url" id="authorWebsite" name="authorWebsite" class="form-control" placeholder="https://yourwebsite.com">
-            </div>
+<!--            <div class="form-group">-->
+<!--                <label for="authorWebsite">网站</label>-->
+<!--                <input type="url" id="authorWebsite" name="authorWebsite" class="form-control" placeholder="https://yourwebsite.com">-->
+<!--            </div>-->
             <div class="form-group">
                 <label for="content">评论内容 *</label>
                 <textarea id="content" name="content" required class="form-control"></textarea>

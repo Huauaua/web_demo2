@@ -77,10 +77,8 @@ public class ArticleController {
         Article article = articleService.getArticleById(id);
         Article prevArticle = articleService.getPreviousArticleById(id);
         Article nextArticle = articleService.getNextArticleById(id);
-        if(prevArticle != null) article.setPreviousTitle(prevArticle.getTitle());
-        else article.setPreviousTitle(null);
-        if(nextArticle != null) article.setNextTitle(nextArticle.getTitle());
-        else article.setNextTitle(null);
+        article.setPreviousArticle(prevArticle);
+        article.setNextArticle(nextArticle);
         model.addAttribute("article", article);
         
         // 添加评论数据

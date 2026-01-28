@@ -19,6 +19,6 @@ public class Article {
     private Integer readTime; // 阅读时间（分钟）
     private Integer number; // 文章序号
 
-    private String previousTitle;
-    private String nextTitle = null;
+    private Article previousArticle = null;
+    private Article nextArticle = null;
 }

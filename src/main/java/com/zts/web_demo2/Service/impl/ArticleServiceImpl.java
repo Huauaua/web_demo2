@@ -899,12 +899,13 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article getPreviousArticleById(Long currentId) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
-            // 查找发布时间早于当前文章且ID最大的文章（即上一篇文章）
-            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND published_at <= (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id != ? ORDER BY published_at DESC, post_id DESC LIMIT 1";
+            // 查找发布时间早于当前文章或发布时间相同但ID小于当前ID的文章（即上一篇文章）
+            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND (published_at < (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') OR (published_at = (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id < ?)) ORDER BY published_at DESC, post_id DESC LIMIT 1";
             
             try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setLong(1, currentId);
                 statement.setLong(2, currentId);
+                statement.setLong(3, currentId);
                 
                 try (java.sql.ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
@@ -963,18 +964,19 @@ public class ArticleServiceImpl implements ArticleService {
             e.printStackTrace();
         }
         
-        return null;
+        return null; // 没有上一篇文章时返回null
     }
     
     @Override
     public Article getNextArticleById(Long currentId) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
-            // 查找发布时间晚于当前文章且ID最小的文章（即下一篇文章）
-            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND published_at >= (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id != ? ORDER BY published_at ASC, post_id ASC LIMIT 1";
+            // 查找发布时间晚于当前文章或发布时间相同但ID大于当前ID的文章（即下一篇文章）
+            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND (published_at > (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') OR (published_at = (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id > ?)) ORDER BY published_at ASC, post_id ASC LIMIT 1";
             
             try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setLong(1, currentId);
                 statement.setLong(2, currentId);
+                statement.setLong(3, currentId);
                 
                 try (java.sql.ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
@@ -1033,6 +1035,6 @@ public class ArticleServiceImpl implements ArticleService {
             e.printStackTrace();
         }
         
-        return null;
+        return null; // 没有下一篇文章时返回null
     }
 }
