@@ -53,34 +53,6 @@ public class CommentController {
         return "redirect:/articles/" + postId;
     }
 
-    // 后台管理：获取所有评论
-    @GetMapping("/admin/api/all")
-    @ResponseBody
-    public List<Comment> getAllComments() {
-        return commentService.getAllComments();
-    }
-
-    // 后台管理：审核评论
-    @PutMapping("/admin/api/approve/{id}")
-    @ResponseBody
-    public Comment approveComment(@PathVariable Long id) {
-        return commentService.approveComment(id);
-    }
-
-    // 后台管理：拒绝评论
-    @PutMapping("/admin/api/reject/{id}")
-    @ResponseBody
-    public Comment rejectComment(@PathVariable Long id) {
-        return commentService.rejectComment(id);
-    }
-
-    // 后台管理：删除评论
-    @DeleteMapping("/admin/api/delete/{id}")
-    @ResponseBody
-    public boolean deleteComment(@PathVariable Long id) {
-        return commentService.deleteComment(id);
-    }
-
     // 获取文章评论总数
     @GetMapping("/api/count/{postId}")
     @ResponseBody

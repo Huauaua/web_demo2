@@ -239,7 +239,7 @@
             </div>
         </div>
         
-        <form method="post" action="/admin/comments/batch/delete" id="batchForm">
+        <form method="post" th:action="@{/admin/comments/batch/delete}" id="batchForm">
             <table>
                 <thead>
                     <tr>
@@ -278,27 +278,17 @@
                         <td>
                             <div th:switch="${comment.status}">
                                 <div th:case="'pending'">
-                                    <form th:action="@{'/admin/comments/approve/' + ${comment.id}}" method="post" style="display: inline;">
-                                        <button type="submit" class="btn btn-success" onclick="return confirm('确定要审核通过这条评论吗？')">审核</button>
-                                    </form>
-                                    <form th:action="@{'/admin/comments/reject/' + ${comment.id}}" method="post" style="display: inline;">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">拒绝</button>
-                                    </form>
+                                    <button type="button" class="btn btn-success" th:attr="onclick='singleAction(\'/admin/comments/approve/\',' + ${comment.id} + ', \'确定要审核通过这条评论吗？\', \'审核\')'">审核</button>
+                                    <button type="button" class="btn btn-danger" th:attr="onclick='singleAction(\'/admin/comments/reject/\',' + ${comment.id} + ', \'确定要将这条评论标记为垃圾评论吗？\', \'拒绝\')'">拒绝</button>
                                 </div>
                                 <div th:case="'approved'">
-                                    <form th:action="@{'/admin/comments/reject/' + ${comment.id}}" method="post" style="display: inline;">
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('确定要将这条评论标记为垃圾评论吗？')">标记垃圾</button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger" th:attr="onclick='singleAction(\'/admin/comments/reject/\',' + ${comment.id} + ', \'确定要将这条评论标记为垃圾评论吗？\', \'标记垃圾\')'">标记垃圾</button>
                                 </div>
                                 <div th:case="'spam'">
-                                    <form th:action="@{'/admin/comments/approve/' + ${comment.id}}" method="post" style="display: inline;">
-                                        <button type="submit" class="btn btn-success" onclick="return confirm('确定要将这条评论恢复为已审核状态吗？')">恢复</button>
-                                    </form>
+                                    <button type="button" class="btn btn-success" th:attr="onclick='singleAction(\'/admin/comments/approve/\',' + ${comment.id} + ', \'确定要将这条评论恢复为已审核状态吗？\', \'恢复\')'">恢复</button>
                                 </div>
                             </div>
-                            <form th:action="@{'/admin/comments/delete/' + ${comment.id}}" method="post" style="display: inline;">
-                                <button type="submit" class="btn btn-warning" onclick="return confirm('确定要删除这条评论吗？')">删除</button>
-                            </form>
+                            <button type="button" class="btn btn-warning" th:attr="onclick='singleAction(\'/admin/comments/delete/\',' + ${comment.id} + ', \'确定要删除这条评论吗？\', \'删除\')'">删除</button>
                         </td>
                     </tr>
                 </tbody>
@@ -334,6 +324,26 @@
             form.action = actionUrl;
             form.method = 'post';
             form.submit();
+        }
+        
+        function singleAction(actionUrl, id, confirmMessage, actionName) {
+            if (confirm(confirmMessage)) {
+                fetch(actionUrl + id, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // 成功后刷新页面
+                        location.reload();
+                    } else {
+                        alert(actionName + '操作失败');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(actionName + '操作失败');
+                });
+            }
         }
         
         // 当选中任何复选框时，同步全选复选框的状态

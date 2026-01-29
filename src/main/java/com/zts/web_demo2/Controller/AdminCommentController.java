@@ -43,7 +43,7 @@ public class AdminCommentController {
         commentService.approveComment(id);
         return "redirect:/admin/comments";
     }
-
+    
     // 拒绝评论
     @PostMapping("/reject/{id}")
     public String rejectComment(@PathVariable Long id) {
@@ -93,6 +93,34 @@ public class AdminCommentController {
             }
         }
         return "redirect:/admin/comments";
+    }
+    
+    // 后台管理API：获取所有评论
+    @GetMapping("/api/all")
+    @ResponseBody
+    public List<Comment> getAllComments() {
+        return commentService.getAllComments();
+    }
+    
+    // 后台管理API：审核评论
+    @PostMapping("/api/approve/{id}")
+    @ResponseBody
+    public Comment approveCommentApi(@PathVariable Long id) {
+        return commentService.approveComment(id);
+    }
+    
+    // 后台管理API：拒绝评论
+    @PostMapping("/api/reject/{id}")
+    @ResponseBody
+    public Comment rejectCommentApi(@PathVariable Long id) {
+        return commentService.rejectComment(id);
+    }
+    
+    // 后台管理API：删除评论
+    @PostMapping("/api/delete/{id}")
+    @ResponseBody
+    public boolean deleteCommentApi(@PathVariable Long id) {
+        return commentService.deleteComment(id);
     }
     
 }
