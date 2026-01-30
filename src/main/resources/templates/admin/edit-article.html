@@ -169,15 +169,6 @@
     </header>
     
     <div class="admin-container">
-        <nav class="admin-nav">
-            <ul>
-                <li><a href="/admin">仪表盘</a></li>
-                <li><a href="/admin/articles">文章管理</a></li>
-                <li th:if="${article.id != null}"><a th:href="@{'/admin/articles/edit/' + ${article.id}}">编辑文章</a></li>
-                <li><a href="/admin/articles/new">新建文章</a></li>
-            </ul>
-        </nav>
-        
         <div th:if="${error}" class="error-message">
             [[${error}]]
         </div>

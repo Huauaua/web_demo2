@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public class Comment {
     private Long id;
     private Long postId; // 对应数据库中的post_id
+    private String postName; // 对应文章标题
     private String authorName; // 对应数据库中的author_name
     private String authorEmail; // 对应数据库中的author_email
     private String authorWebsite; // 对应数据库中的author_website
