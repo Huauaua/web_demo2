@@ -68,6 +68,32 @@ img {
     color: white;
 }
 
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-warning {
+    background-color: #f39c12;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+
 /* 头部样式 */
 header {
     background-color: #fff;
@@ -310,6 +336,27 @@ footer {
     border-top: 1px solid #34495e;
     color: #bdc3c7;
     font-size: 0.9rem;
+}
+
+/*stat-card*/
+.stat-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #7f8c8d;
+    font-size: 1rem;
 }
 
 /* 响应式设计 */
