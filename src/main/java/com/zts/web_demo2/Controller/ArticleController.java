@@ -23,9 +23,20 @@ public class ArticleController {
 
     // 显示文章列表页面
     @GetMapping
-    public String articlesPage(Model model) {
-        List<Article> articles = articleService.getAllArticles();
+    public String articlesPage(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 12; // 每页显示12篇文章
+        List<Article> articles = articleService.getPaginatedArticles(page, pageSize);
+        int totalArticles = articleService.getArticleCount();
+        int totalPages = (int) Math.ceil((double) totalArticles / pageSize);
+        
         model.addAttribute("articles", articles);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalArticles", totalArticles);
+        model.addAttribute("hasPrev", page > 0);
+        model.addAttribute("hasNext", page < totalPages - 1);
+        model.addAttribute("pageSize", pageSize);
+        
         return "articles"; // 返回 articles.html 模板
     }
 
@@ -119,6 +130,7 @@ public class ArticleController {
     // 发布文章页面
     @PostMapping("/publish")
     public String publishArticle(Article article, Model model) {
+        model.addAttribute("article", article);
         Article savedArticle = articleService.createArticle(article);
         return "redirect:/articles/" + savedArticle.getId();
     }

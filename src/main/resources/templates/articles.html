@@ -32,49 +32,9 @@
       padding: 80px 0;
     }
 
-    .filter-section {
-      background-color: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      margin-bottom: 40px;
-    }
-
-    .filter-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
-
     .filter-header h2 {
       font-size: 1.8rem;
       color: #2c3e50;
-    }
-
-    .filter-reset {
-      color: #3498db;
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .filter-reset:hover {
-      color: #2980b9;
-    }
-
-    .filter-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .filter-group {
-      margin-bottom: 15px;
     }
 
     .filter-group label {
@@ -82,41 +42,6 @@
       margin-bottom: 8px;
       font-weight: 600;
       color: #2c3e50;
-    }
-
-    .filter-select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 1rem;
-      background-color: white;
-    }
-
-    .filter-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .filter-tag {
-      background-color: #ecf0f1;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .filter-tag:hover {
-      background-color: #d5dbdd;
-    }
-
-    .filter-tag.active {
-      background-color: #3498db;
-      color: white;
     }
 
     .articles-stats {
@@ -143,135 +68,6 @@
       font-size: 0.9rem;
     }
 
-    .articles-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 30px;
-      margin-bottom: 60px;
-    }
-
-    .year-section {
-      margin-bottom: 60px;
-    }
-
-    .year-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 30px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid #3498db;
-    }
-
-    .year-title {
-      font-size: 2rem;
-      color: #2c3e50;
-      margin-right: 20px;
-    }
-
-    .year-count {
-      background-color: #3498db;
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-    }
-
-    .month-section {
-      margin-bottom: 40px;
-    }
-
-    .month-title {
-      font-size: 1.5rem;
-      color: #2c3e50;
-      margin-bottom: 20px;
-      padding-left: 10px;
-      border-left: 4px solid #3498db;
-    }
-
-    .article-list-item {
-      background-color: white;
-      border-radius: 10px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-      transition: transform 0.3s, box-shadow 0.3s;
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-    }
-
-    .article-list-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .article-list-date {
-      min-width: 100px;
-      text-align: center;
-    }
-
-    .article-date-day {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #3498db;
-      line-height: 1;
-    }
-
-    .article-date-month {
-      font-size: 1rem;
-      color: #7f8c8d;
-      text-transform: uppercase;
-    }
-
-    .article-list-content {
-      flex: 1;
-    }
-
-    .article-list-title {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-      color: #2c3e50;
-    }
-
-    .article-list-excerpt {
-      color: #666;
-      margin-bottom: 15px;
-      line-height: 1.6;
-    }
-
-    .article-list-meta {
-      display: flex;
-      gap: 15px;
-      font-size: 0.9rem;
-      color: #7f8c8d;
-    }
-
-    .view-toggle {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 40px;
-      background-color: white;
-      border-radius: 10px;
-      padding: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .view-btn {
-      padding: 10px 30px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      font-size: 1rem;
-      color: #7f8c8d;
-      border-radius: 5px;
-      transition: all 0.3s;
-    }
-
-    .view-btn.active {
-      background-color: #3498db;
-      color: white;
-    }
-
     .pagination {
       display: flex;
       justify-content: center;
@@ -286,12 +82,23 @@
       justify-content: center;
       width: 40px;
       height: 40px;
-      border-radius: 50%;
+      border-radius: 4px; /* 方形按钮 */
       background-color: white;
       color: #2c3e50;
       border: 1px solid #ddd;
       cursor: pointer;
       transition: all 0.3s;
+      box-sizing: border-box; /* 包含边框在内的总尺寸 */
+      font-size: 14px; /* 控制字体大小 */
+      line-height: 1; /* 控制行高，避免字体溢出 */
+      text-decoration: none; /* 移除链接下划线 */
+    }
+    
+    /* 上一页和下一页按钮使用更大的宽度 */
+    .page-btn.nav-btn {
+      width: auto;
+      min-width: 80px;
+      padding: 0 12px;
     }
 
     .page-btn:hover {
@@ -299,15 +106,65 @@
       color: white;
       border-color: #3498db;
     }
-
-    .page-btn.active {
-      background-color: #3498db;
-      color: white;
-      border-color: #3498db;
+    
+    /* 特别针对页码链接的样式 */
+    .pagination a.page-btn,
+    .pagination span.page-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      flex-shrink: 0; /* 防止按钮被压缩 */
     }
+
+    /*.page-btn.active {*/
+    /*  background-color: #3498db;*/
+    /*  color: white;*/
+    /*  border-color: #3498db;*/
+    /*  border-radius: 4px; !* 保持方形 *!*/
+    /*}*/
 
     .page-ellipsis {
       color: #7f8c8d;
+    }
+    
+    .pagination-info {
+      margin-left: 15px;
+      margin-right: 15px;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      display: inline-block;
+      align-self: center;
+    }
+    
+    .pagination-jump {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      align-self: center;
+    }
+    
+    .pagination-jump input {
+      width: 60px;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    
+    .pagination-jump button {
+      padding: 6px 12px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    .pagination-jump button:hover {
+      background-color: #2980b9;
     }
 
     .empty-state {
@@ -337,10 +194,6 @@
     }
 
     @media (max-width: 992px) {
-      .articles-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      }
-
       .articles-stats {
         flex-direction: column;
         gap: 20px;
@@ -356,35 +209,6 @@
         font-size: 1.1rem;
       }
 
-      .article-list-item {
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .article-list-date {
-        text-align: left;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .article-date-day {
-        font-size: 2rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .filter-options {
-        grid-template-columns: 1fr;
-      }
-
-      .articles-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .view-toggle {
-        flex-direction: column;
-      }
     }
   </style>
 </head>
@@ -423,7 +247,7 @@
   <!-- 统计信息 -->
   <div class="articles-stats">
     <div class="stat-item">
-      <div class="stat-number">42</div>
+      <div class="stat-number" th:text="${totalArticles}">总文章数</div>
       <div class="stat-label">总文章数</div>
     </div>
     <div class="stat-item">
@@ -438,16 +262,6 @@
       <div class="stat-number">2020</div>
       <div class="stat-label">开始年份</div>
     </div>
-  </div>
-
-  <!-- 视图切换 -->
-  <div class="view-toggle">
-    <button class="view-btn active" id="gridViewBtn" style="margin-right: 300px;">
-      <i class="fas fa-th-large"></i> 网格视图
-    </button>
-    <button class="view-btn" id="listViewBtn">
-      <i class="fas fa-list"></i> 列表视图
-    </button>
   </div>
 
   <!-- 网格视图 -->
@@ -480,190 +294,65 @@
     </div>
   </div>
 
-  <!-- 列表视图 -->
-  <div id="listView" class="articles-view" style="display: none;">
-    <!-- 2023年 -->
-    <div class="year-section">
-      <div class="year-header">
-        <h3 class="year-title">2023年</h3>
-        <span class="year-count">15篇文章</span>
-      </div>
-
-      <!-- 10月 -->
-      <div class="month-section">
-        <h4 class="month-title">十月</h4>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">15</div>
-            <div class="article-date-month">Oct</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">现代前端开发趋势与思考</h3>
-            <p class="article-list-excerpt">探索2023年及以后的前端开发趋势，从框架演进到开发范式的变化，以及如何在这些变化中保持竞争力。</p>
-            <div class="article-list-meta">
-              <span>技术</span>
-              <span>阅读时间: 8分钟</span>
-              <span>标签: 前端开发, JavaScript, React</span>
-            </div>
-          </div>
-          <a href="/article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">10</div>
-            <div class="article-date-month">Oct</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">提升工作效率的10个实用技巧</h3>
-            <p class="article-list-excerpt">在信息过载的时代，如何保持专注并高效完成工作？分享我实践过的10个有效方法，希望能对你有所帮助。</p>
-            <div class="article-list-meta">
-              <span>效率</span>
-              <span>阅读时间: 6分钟</span>
-              <span>标签: 生产力, 时间管理</span>
-            </div>
-          </div>
-          <a href="/article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">05</div>
-            <div class="article-date-month">Oct</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">记录旅行的意义：摄影与文字的双重记忆</h3>
-            <p class="article-list-excerpt">旅行不仅仅是去到一个新地方，更是对自我认知的扩展。通过摄影和文字记录旅程，让记忆更加鲜活而深刻。</p>
-            <div class="article-list-meta">
-              <span>生活</span>
-              <span>阅读时间: 7分钟</span>
-              <span>标签: 旅行, 摄影</span>
-            </div>
-          </div>
-          <a href="/article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-
-      <!-- 9月 -->
-      <div class="month-section">
-        <h4 class="month-title">九月</h4>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">28</div>
-            <div class="article-date-month">Sep</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">高效学习的方法论：从被动接收主动构建</h3>
-            <p class="article-list-excerpt">在学习新知识时，我们常常陷入被动接收信息的误区。本文将探讨如何转变为主动构建知识体系的学习者。</p>
-            <div class="article-list-meta">
-              <span>学习</span>
-              <span>阅读时间: 9分钟</span>
-              <span>标签: 学习方法, 知识管理</span>
-            </div>
-          </div>
-          <a href="/article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">20</div>
-            <div class="article-date-month">Sep</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">Python数据分析入门与实践指南</h3>
-            <p class="article-list-excerpt">使用Python进行数据分析已成为现代职场的重要技能。本文将从基础概念到实际案例，带你快速入门数据分析。</p>
-            <div class="article-list-meta">
-              <span>技术</span>
-              <span>阅读时间: 12分钟</span>
-              <span>标签: Python, 数据分析</span>
-            </div>
-          </div>
-          <a href="/article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">15</div>
-            <div class="article-date-month">Sep</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">远程工作者的健康管理策略</h3>
-            <p class="article-list-excerpt">随着远程工作成为常态，如何在工作与生活之间找到平衡，保持身心健康？分享我的实践经验。</p>
-            <div class="article-list-meta">
-              <span>健康</span>
-              <span>阅读时间: 7分钟</span>
-              <span>标签: 健康, 远程工作</span>
-            </div>
-          </div>
-          <a href="article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2022年 -->
-    <div class="year-section">
-      <div class="year-header">
-        <h3 class="year-title">2022年</h3>
-        <span class="year-count">20篇文章</span>
-      </div>
-
-      <!-- 8月 -->
-      <div class="month-section">
-        <h4 class="month-title">八月</h4>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">22</div>
-            <div class="article-date-month">Aug</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">TypeScript高级类型使用指南</h3>
-            <p class="article-list-excerpt">深入探讨TypeScript的高级类型特性，包括条件类型、映射类型和模板字面量类型，提升类型安全性和代码质量。</p>
-            <div class="article-list-meta">
-              <span>技术</span>
-              <span>阅读时间: 10分钟</span>
-              <span>标签: TypeScript, 前端开发</span>
-            </div>
-          </div>
-          <a href="/article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-
-        <div class="article-list-item">
-          <div class="article-list-date">
-            <div class="article-date-day">10</div>
-            <div class="article-date-month">Aug</div>
-          </div>
-          <div class="article-list-content">
-            <h3 class="article-list-title">如何建立个人知识管理系统</h3>
-            <p class="article-list-excerpt">在这个信息爆炸的时代，建立一个有效的个人知识管理系统至关重要。分享我的知识管理流程和工具选择。</p>
-            <div class="article-list-meta">
-              <span>效率</span>
-              <span>阅读时间: 8分钟</span>
-              <span>标签: 知识管理, 工具推荐</span>
-            </div>
-          </div>
-          <a href="/article" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- 分页 -->
-  <div class="pagination">
-    <button class="page-btn">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <span class="page-ellipsis">...</span>
-    <button class="page-btn">8</button>
-    <button class="page-btn">
-      <i class="fas fa-chevron-right"></i>
-    </button>
+  <div class="pagination" th:if="${totalPages > 0}">
+    <a th:href="@{/articles(page=${currentPage - 1})}" class="page-btn nav-btn" th:if="${hasPrev}">
+      <i class="fas fa-chevron-left"></i> 上一页
+    </a>
+    
+    <!-- 页码列表，最多显示前6页或直到总页数（取较小者） -->
+    <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+       th:if="${pageNum le 5}"
+       th:href="@{/articles(page=${pageNum})}" 
+       class="page-btn" 
+       th:classappend="${pageNum == currentPage} ? 'active' : ''"
+       th:text="${pageNum + 1}">page</a>
+    
+    <!-- 6页以后的省略号 -->
+    <span class="page-ellipsis" th:if="${totalPages > 6}">...</span>
+    
+    <!-- 如果总页数超过6页，显示最后一页 -->
+    <a th:if="${totalPages > 6}" 
+       th:href="@{/articles(page=${totalPages - 1})}" 
+       class="page-btn"
+       th:classappend="${totalPages - 1 == currentPage} ? 'active' : ''"
+       th:text="${totalPages}">last</a>
+    
+    <a th:href="@{/articles(page=${currentPage + 1})}" class="page-btn nav-btn" th:if="${hasNext}">
+      下一页 <i class="fas fa-chevron-right"></i>
+    </a>
+    
+    <!-- 总页数和文章数信息 -->
+    <div class="pagination-info">
+      共 [[${totalPages}]] 页 / [[${totalArticles}]] 个
+    </div>
+    
+    <!-- 跳转到指定页 -->
+    <div class="pagination-jump">
+      <label for="jumpPage">跳至</label><input type="number" id="jumpPage" min="1" th:max="${totalPages}" placeholder="页码" />
+      <button onclick="jumpToPage()">跳转</button>
+    </div>
   </div>
+  
+  <script>
+    function jumpToPage() {
+      const pageNum = document.getElementById('jumpPage').value;
+      const maxPage = document.getElementById('jumpPage').getAttribute('max');
+      
+      if (pageNum && parseInt(pageNum) >= 1 && parseInt(pageNum) <= maxPage) {
+        window.location.href = '/articles?page=' + (parseInt(pageNum) - 1);
+      } else {
+        alert('请输入有效的页码 (1-' + maxPage + ')');
+      }
+    }
+    
+    // 回车键跳转
+    document.getElementById('jumpPage')?.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        jumpToPage();
+      }
+    });
+  </script>
 </section>
 
 <!-- 页脚 -->
@@ -839,22 +528,8 @@
     // 这里可以添加实际筛选逻辑，比如AJAX请求或DOM过滤
   }
 
-  // 分页按钮点击
-  document.querySelectorAll('.page-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      // 移除所有active类
-      document.querySelectorAll('.page-btn').forEach(b => {
-        b.classList.remove('active');
-      });
-
-      // 如果是数字按钮，添加active类
-      if (!this.querySelector('i')) {
-        this.classList.add('active');
-      }
-
-      // 这里可以添加实际分页逻辑
-    });
-  });
+  // 分页按钮点击 - 现在使用Thymeleaf生成的链接，不需要额外的JS处理
+  // 分页按钮点击事件已经在HTML中定义了链接，这里只需要移除之前的处理逻辑
 </script>
 </body>
 </html>
