@@ -97,27 +97,6 @@
         tr:hover {
             background-color: #f8f9fa;
         }
-
-        .status-approved {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-        }
-        
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-        }
-        
-        .status-spam {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-        }
         
         .comment-content {
             max-width: 300px;
@@ -151,6 +130,8 @@
             display: flex;
             justify-content: center;
             gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
         
         .page-link {
@@ -159,11 +140,6 @@
             color: #2c3e50;
             text-decoration: none;
             border-radius: 4px;
-        }
-        
-        .page-link.active {
-            background-color: #3498db;
-            color: white;
         }
 
         .btn {
@@ -175,6 +151,87 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
+        }
+        
+        /* 分页样式 */
+        .page-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 4px; /* 方形按钮 */
+          background-color: white;
+          color: #2c3e50;
+          border: 1px solid #ddd;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-sizing: border-box; /* 包含边框在内的总尺寸 */
+          font-size: 14px; /* 控制字体大小 */
+          line-height: 1; /* 控制行高，避免字体溢出 */
+          text-decoration: none; /* 移除链接下划线 */
+        }
+        
+        .page-btn:hover {
+          background-color: #3498db;
+          color: white;
+          border-color: #3498db;
+        }
+        
+        /* 上一页和下一页按钮使用更大的宽度 */
+        .page-btn.nav-btn {
+          width: auto;
+          min-width: 80px;
+          padding: 0 12px;
+        }
+        
+        /* 特别针对页码链接的样式 */
+        .pagination a.page-btn,
+        .pagination span.page-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          overflow: hidden;
+          flex-shrink: 0; /* 防止按钮被压缩 */
+        }
+        
+        .pagination-info {
+          margin-left: 15px;
+          margin-right: 15px;
+          color: #7f8c8d;
+          font-size: 0.9rem;
+          display: inline-block;
+          align-self: center;
+        }
+        
+        .pagination-jump {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          align-self: center;
+        }
+        
+        .pagination-jump input {
+          width: 60px;
+          padding: 6px 8px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 0.9rem;
+        }
+        
+        .pagination-jump button {
+          padding: 6px 12px;
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+        }
+        
+        .pagination-jump button:hover {
+          background-color: #2980b9;
         }
     </style>
 </head>
@@ -200,12 +257,14 @@
             <h2 class="section-title">评论列表</h2>
             <div>
                 <form method="GET" style="display: inline;">
-                    <select name="status" onchange="this.form.submit()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-right: 1rem;">
-                        <option value="">所有状态</option>
-                        <option value="approved" th:selected="${param.status != null and param.status[0] == 'approved'}">已审核</option>
-                        <option value="pending" th:selected="${param.status != null and param.status[0] == 'pending'}">待审核</option>
-                        <option value="spam" th:selected="${param.status != null and param.status[0] == 'spam'}">垃圾评论</option>
-                    </select>
+                    <label>
+                        <select name="status" onchange="this.form.submit()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-right: 1rem;">
+                            <option value="">所有状态</option>
+                            <option value="approved" th:selected="${status != null and status == 'approved'}">已审核</option>
+                            <option value="pending" th:selected="${status != null and status == 'pending'}">待审核</option>
+                            <option value="spam" th:selected="${status != null and status == 'spam'}">垃圾评论</option>
+                        </select>
+                    </label>
                 </form>
             </div>
         </div>
@@ -215,7 +274,7 @@
                 <thead>
                     <tr>
                         <th class="checkbox-column">
-                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
+                            <label for="selectAll"></label><input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
                         </th>
                         <th>ID</th>
                         <th>文章标题</th>
@@ -234,7 +293,9 @@
                     </tr>
                     <tr th:each="comment : ${comments}">
                         <td class="checkbox-column">
-                            <input type="checkbox" name="ids" th:value="${comment.id}">
+                            <label>
+                                <input type="checkbox" name="ids" th:value="${comment.id}">
+                            </label>
                         </td>
                         <td th:text="${comment.id}">1</td>
                         <td th:text="${comment.postName ?: '未知文章'}">1</td>
@@ -273,11 +334,43 @@
             <button type="button" class="btn btn-warning" onclick="if(confirm('确定要删除选中的评论吗？')) performBatchAction('/admin/comments/batch/delete')">删除选中</button>
         </div>
         
-        <div class="pagination">
-            <a href="#" class="page-link active">1</a>
-            <a href="#" class="page-link">2</a>
-            <a href="#" class="page-link">3</a>
-            <a href="#" class="page-link">下一页</a>
+        <div class="pagination" th:if="${totalPages > 0}">
+            <a th:href="@{/admin/comments(status=${status}, page=${currentPage - 1})}" class="page-btn nav-btn" th:if="${hasPrev}">
+                <i class="fas fa-chevron-left"></i> 上一页
+            </a>
+            
+            <!-- 页码列表，最多显示前6页或直到总页数（取较小者） -->
+            <a th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+               th:if="${pageNum le 5}"
+               th:href="@{/admin/comments(status=${status}, page=${pageNum})}" 
+               class="page-btn" 
+               th:classappend="${pageNum == currentPage} ? 'active' : ''"
+               th:text="${pageNum + 1}">page</a>
+            
+            <!-- 6页以后的省略号 -->
+            <span class="page-ellipsis" th:if="${totalPages > 6}">...</span>
+            
+            <!-- 如果总页数超过6页，显示最后一页 -->
+            <a th:if="${totalPages > 6}" 
+               th:href="@{/admin/comments(status=${status}, page=${totalPages - 1})}" 
+               class="page-btn"
+               th:classappend="${totalPages - 1 == currentPage} ? 'active' : ''"
+               th:text="${totalPages}">last</a>
+            
+            <a th:href="@{/admin/comments(status=${status}, page=${currentPage + 1})}" class="page-btn nav-btn" th:if="${hasNext}">
+                下一页 <i class="fas fa-chevron-right"></i>
+            </a>
+            
+            <!-- 总页数和评论数信息 -->
+            <div class="pagination-info">
+                共 [[${totalPages}]] 页 / [[${totalComments}]] 个
+            </div>
+            
+            <!-- 跳转到指定页 -->
+            <div class="pagination-jump">
+                <label for="jumpPage">跳至</label><input type="number" id="jumpPage" min="1" th:max="${totalPages}" placeholder="页码" />
+                <button onclick="jumpToPage()">跳转</button>
+            </div>
         </div>
     </div>
 
@@ -325,6 +418,29 @@
                 const allChecked = Array.from(allCheckboxes).every(cb => cb.checked);
                 selectAllCheckbox.checked = allChecked;
             });
+        });
+        
+        function jumpToPage() {
+          const pageNum = document.getElementById('jumpPage').value;
+          const maxPage = document.getElementById('jumpPage').getAttribute('max');
+          const status = new URLSearchParams(window.location.search).get('status');
+          
+          if (pageNum && parseInt(pageNum) >= 1 && parseInt(pageNum) <= maxPage) {
+            let url = '/admin/comments?page=' + (parseInt(pageNum) - 1);
+            if (status) {
+              url += '&status=' + status;
+            }
+            window.location.href = url;
+          } else {
+            alert('请输入有效的页码 (1-' + maxPage + ')');
+          }
+        }
+        
+        // 回车键跳转
+        document.getElementById('jumpPage')?.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            jumpToPage();
+          }
         });
     </script>
 </body>

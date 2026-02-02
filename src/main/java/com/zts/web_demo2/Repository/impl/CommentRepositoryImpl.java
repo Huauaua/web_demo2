@@ -169,6 +169,94 @@ public class CommentRepositoryImpl implements CommentRepository {
 
         return 0;
     }
+    
+    @Override
+    public List<Comment> findPaginated(int page, int size) {
+        List<Comment> comments = new ArrayList<>();
+        int offset = page * size;
+        String sql = "SELECT * FROM comments ORDER BY created_at DESC LIMIT ? OFFSET ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, size);
+            stmt.setInt(2, offset);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Comment comment = mapResultSetToComment(rs);
+                comments.add(comment);
+            }
+        } catch (Exception e) {
+            System.err.println("分页查询评论失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return comments;
+    }
+    
+    @Override
+    public int countAll() {
+        String sql = "SELECT COUNT(*) FROM comments";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.err.println("查询评论总数失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+    
+    @Override
+    public List<Comment> findPaginatedByStatus(int page, int size, String status) {
+        List<Comment> comments = new ArrayList<>();
+        int offset = page * size;
+        String sql = "SELECT * FROM comments WHERE status = ? ORDER BY created_at DESC LIMIT ? OFFSET ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, size);
+            stmt.setInt(3, offset);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Comment comment = mapResultSetToComment(rs);
+                comments.add(comment);
+            }
+        } catch (Exception e) {
+            System.err.println("按状态分页查询评论失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return comments;
+    }
+    
+    @Override
+    public int countByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM comments WHERE status = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            System.err.println("按状态查询评论总数失败: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
 
     private Comment mapResultSetToComment(ResultSet rs) throws Exception {
         Comment comment = new Comment();

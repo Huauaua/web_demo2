@@ -18,17 +18,32 @@ public class AdminCommentController {
 
     // 评论管理页面
     @GetMapping
-    public String commentsManagement(@RequestParam(required = false) String status, Model model) {
+    public String commentsManagement(@RequestParam(required = false) String status, @RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 10; // 每页显示10条评论
         List<Comment> comments;
+        int totalComments;
         
         if (status != null && !status.isEmpty()) {
-            // 这里需要添加按状态筛选的逻辑
-            comments = getCommentsByStatus(status);
+            // 按状态筛选的分页查询
+            comments = commentService.getPaginatedCommentsByStatus(page, pageSize, status);
+            totalComments = commentService.getCommentCountByStatus(status);
         } else {
-            comments = commentService.getAllComments();
+            // 获取所有评论的分页查询
+            comments = commentService.getPaginatedComments(page, pageSize);
+            totalComments = commentService.getCommentCount();
         }
         
+        int totalPages = (int) Math.ceil((double) totalComments / pageSize);
+        
         model.addAttribute("comments", comments);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalComments", totalComments);
+        model.addAttribute("hasPrev", page > 0);
+        model.addAttribute("hasNext", page < totalPages - 1);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("status", status); // 保持状态参数
+        
         return "admin/comments"; // 返回评论管理页面模板
     }
     

@@ -131,4 +131,44 @@ public class CommentServiceImpl implements CommentService {
                 .filter(comment -> status.equals(comment.getStatus()))
                 .toList();
     }
+    
+    @Override
+    public List<Comment> getPaginatedComments(int page, int size) {
+        List<Comment> comments = commentRepository.findPaginated(page, size);
+        // 为所有评论设置文章标题
+        for (Comment comment : comments) {
+            Article article = articleService.getArticleById(comment.getPostId());
+            if (article != null) {
+                comment.setPostName(article.getTitle());
+            } else {
+                comment.setPostName("未知文章");
+            }
+        }
+        return comments;
+    }
+    
+    @Override
+    public int getCommentCount() {
+        return commentRepository.countAll();
+    }
+    
+    @Override
+    public List<Comment> getPaginatedCommentsByStatus(int page, int size, String status) {
+        List<Comment> comments = commentRepository.findPaginatedByStatus(page, size, status);
+        // 为评论设置文章标题
+        for (Comment comment : comments) {
+            Article article = articleService.getArticleById(comment.getPostId());
+            if (article != null) {
+                comment.setPostName(article.getTitle());
+            } else {
+                comment.setPostName("未知文章");
+            }
+        }
+        return comments;
+    }
+    
+    @Override
+    public int getCommentCountByStatus(String status) {
+        return commentRepository.countByStatus(status);
+    }
 }

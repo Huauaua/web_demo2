@@ -25,4 +25,16 @@ public interface CommentRepository {
 
     // 根据文章ID获取评论总数
     int countByPostId(Long postId);
+    
+    // 分页获取所有评论
+    List<Comment> findPaginated(int page, int size);
+    
+    // 获取评论总数
+    int countAll();
+    
+    // 根据状态分页获取评论
+    List<Comment> findPaginatedByStatus(int page, int size, String status);
+    
+    // 根据状态获取评论数量
+    int countByStatus(String status);
 }

@@ -31,4 +31,16 @@ public interface CommentService {
 
     // 获取文章的评论总数
     int getCommentCountByPostId(Long postId);
+    
+    // 分页获取所有评论
+    List<Comment> getPaginatedComments(int page, int size);
+    
+    // 获取评论总数
+    int getCommentCount();
+    
+    // 根据状态分页获取评论
+    List<Comment> getPaginatedCommentsByStatus(int page, int size, String status);
+    
+    // 根据状态获取评论数量
+    int getCommentCountByStatus(String status);
 }
