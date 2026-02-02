@@ -20,10 +20,20 @@ public class AdminController {
     
     // 后台管理首页
     @GetMapping
-    public String adminHome(Model model) {
-        List<Article> articles = articleService.getArticlesWithSequentialNumbers();
+    public String adminHome(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 10; // 每页显示10篇文章
+        List<Article> articles = articleService.getPaginatedArticles(page, pageSize);
+        int totalArticles = articleService.getArticleCount();
+        int totalPages = (int) Math.ceil((double) totalArticles / pageSize);
+        
         model.addAttribute("articles", articles);
-        model.addAttribute("articleCount", articleService.getArticleCount());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalArticles", totalArticles);
+        model.addAttribute("hasPrev", page > 0);
+        model.addAttribute("hasNext", page < totalPages - 1);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("articleCount", totalArticles);
         model.addAttribute("categoryCount", articleService.getCategoryCount());
         model.addAttribute("tagCount", articleService.getTagCount());
         return "admin/index"; // 返回后台管理首页模板
@@ -31,10 +41,20 @@ public class AdminController {
     
     // 文章管理页面
     @GetMapping("/articles")
-    public String articlesManagement(Model model) {
-        List<Article> articles = articleService.getArticlesWithSequentialNumbers();
+    public String articlesManagement(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 10; // 每页显示10篇文章
+        List<Article> articles = articleService.getPaginatedArticles(page, pageSize);
+        int totalArticles = articleService.getArticleCount();
+        int totalPages = (int) Math.ceil((double) totalArticles / pageSize);
+        
         model.addAttribute("articles", articles);
-        model.addAttribute("articleCount", articleService.getArticleCount());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalArticles", totalArticles);
+        model.addAttribute("hasPrev", page > 0);
+        model.addAttribute("hasNext", page < totalPages - 1);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("articleCount", totalArticles);
         model.addAttribute("categoryCount", articleService.getCategoryCount());
         model.addAttribute("tagCount", articleService.getTagCount());
         return "admin/articles"; // 返回文章管理页面模板
@@ -168,7 +188,7 @@ public class AdminController {
         try {
             boolean success = articleService.deleteArticle(id);
             if (success) {
-                // 可以添加删除成功的消息
+                return "redirect:/admin/articles";
             }
         } catch (Exception e) {
             // 可以添加删除失败的消息
