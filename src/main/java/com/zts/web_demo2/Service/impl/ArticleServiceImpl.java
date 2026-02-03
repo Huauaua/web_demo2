@@ -2,6 +2,7 @@ package com.zts.web_demo2.Service.impl;
 
 import com.zts.web_demo2.Entity.Article;
 import com.zts.web_demo2.Service.ArticleService;
+import com.zts.web_demo2.Util.MarkdownUtil;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -118,7 +119,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主"); // 默认作者
                         
@@ -480,7 +488,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主"); // 默认作者
                         
@@ -542,7 +557,62 @@ public class ArticleServiceImpl implements ArticleService {
             }
         }
     }
-
+        
+    /**
+     * 检测内容是否为Markdown格式
+     * @param content 内容字符串
+     * @return 是否为Markdown格式
+     */
+    private boolean isMarkdownContent(String content) {
+        if (content == null || content.trim().isEmpty()) {
+            return false;
+        }
+            
+        // 检测常见的Markdown特征
+        // 1. 检查是否有标题标记 (#)
+        if (content.contains("\n# ") || content.startsWith("# ") || 
+            content.contains("\n## ") || content.startsWith("## ") ||
+            content.contains("\n### ") || content.startsWith("### ")) {
+            return true;
+        }
+            
+        // 2. 检查是否有列表标记 (- 或 *)
+        if (content.contains("\n- ") || content.contains("\n* ")) {
+            return true;
+        }
+            
+        // 3. 检查是否有粗体/斜体标记 (** 或 *)
+        if (content.contains("**") || content.contains("* ") && content.contains(" *")) {
+            return true;
+        }
+            
+        // 4. 检查是否有代码块标记
+        if (content.contains("```")) {
+            return true;
+        }
+            
+        // 5. 检查是否有链接标记 []()
+        if (content.contains("[](") && content.contains(")")) {
+            return true;
+        }
+            
+        // 6. 检查是否有引用标记 (> )
+        if (content.contains("> ") || content.contains(">\n")) {
+            return true;
+        }
+            
+        // 如果没有检测到HTML标签，可能是Markdown
+        if (!content.contains("<p>") && !content.contains("<div>") && !content.contains("<h") &&
+            !content.contains("<ul>") && !content.contains("<li>") && !content.contains("<br")) {
+            // 更进一步的判断，如果有很多换行符，可能是Markdown
+            if (content.chars().mapToObj(c -> (char) c).reduce(0, (count, c) -> c == '\n' ? count + 1 : count, Integer::sum) > 3) {
+                return true;
+            }
+        }
+            
+        return false;
+    }
+        
     @Override
     public List<Article> getArticlesByCategory(String category) {
         List<Article> articles = new java.util.ArrayList<>();
@@ -565,7 +635,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主"); // 默认作者
                         article.setCategory(category); // 已知分类
@@ -630,7 +707,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主"); // 默认作者
                         
@@ -690,7 +774,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主"); // 默认作者
                         
@@ -766,7 +857,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主"); // 默认作者
                         
@@ -912,7 +1010,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主");
                         
@@ -971,7 +1076,7 @@ public class ArticleServiceImpl implements ArticleService {
     public Article getNextArticleById(Long currentId) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaweb", "root", "root123")) {
             // 查找发布时间晚于当前文章或发布时间相同但ID大于当前ID的文章（即下一篇文章）
-            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND (published_at > (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') OR (published_at = (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id > ?)) ORDER BY published_at ASC, post_id ASC LIMIT 1";
+            String sql = "SELECT post_id, title, content, excerpt, featured_image, reading_time_minutes, published_at FROM posts WHERE status = 'published' AND (published_at > (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') OR (published_at = (SELECT published_at FROM posts WHERE post_id = ? AND status = 'published') AND post_id > ?)) ORDER BY published_at , post_id LIMIT 1";
             
             try (java.sql.PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setLong(1, currentId);
@@ -983,7 +1088,14 @@ public class ArticleServiceImpl implements ArticleService {
                         Article article = new Article();
                         article.setId(resultSet.getLong("post_id"));
                         article.setTitle(resultSet.getString("title"));
-                        article.setContent(resultSet.getString("content"));
+                        String rawContent = resultSet.getString("content");
+                        // 检测是否为Markdown格式（简单检测，可以根据需求调整）
+                        boolean isMarkdown = isMarkdownContent(rawContent);
+                        if (isMarkdown) {
+                            article.setContent(MarkdownUtil.toHtml(rawContent));
+                        } else {
+                            article.setContent(rawContent); // 保持原有的HTML内容
+                        }
                         article.setExcerpt(resultSet.getString("excerpt"));
                         article.setAuthor("博主");
                         

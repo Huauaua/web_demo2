@@ -134,4 +134,26 @@ public class ArticleController {
         Article savedArticle = articleService.createArticle(article);
         return "redirect:/articles/" + savedArticle.getId();
     }
+    
+    // 显示Markdown写博客页面
+    @GetMapping("/markdown-write")
+    public String writeMarkdownArticlePage(Model model) {
+        model.addAttribute("article", new Article());
+        return "write-markdown-article"; // 返回 write-markdown-article.html 模板
+    }
+    
+    // Markdown创建新文章API
+    @PostMapping("/api/markdown-create")
+    @ResponseBody
+    public Article createMarkdownArticle(@RequestBody Article article) {
+        return articleService.createArticle(article);
+    }
+    
+    // Markdown发布文章页面
+    @PostMapping("/markdown-publish")
+    public String publishMarkdownArticle(Article article, Model model) {
+        model.addAttribute("article", article);
+        Article savedArticle = articleService.createArticle(article);
+        return "redirect:/articles/" + savedArticle.getId();
+    }
 }
