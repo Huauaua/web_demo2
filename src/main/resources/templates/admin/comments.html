@@ -81,10 +81,14 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         th, td {
-            padding: 0.75rem;
+            padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #ecf0f1;
         }
@@ -92,10 +96,49 @@
         th {
             background-color: #f8f9fa;
             font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        tr {
+            transition: background-color 0.2s ease;
         }
         
         tr:hover {
             background-color: #f8f9fa;
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        
+        .status-spam {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
         }
         
         .comment-content {
@@ -134,14 +177,6 @@
             flex-wrap: wrap;
         }
         
-        .page-link {
-            padding: 0.5rem 1rem;
-            background-color: #ecf0f1;
-            color: #2c3e50;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
         .btn {
             width: 110px;
             margin-bottom: 0.5rem;
@@ -151,6 +186,33 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-success {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
         
         /* 分页样式 */
@@ -176,6 +238,13 @@
           background-color: #3498db;
           color: white;
           border-color: #3498db;
+        }
+        
+        .page-btn.active {
+          background-color: #3498db;
+          color: white;
+          border-color: #3498db;
+          border-radius: 4px; /* 保持方形 */
         }
         
         /* 上一页和下一页按钮使用更大的宽度 */
@@ -233,6 +302,21 @@
         .pagination-jump button:hover {
           background-color: #2980b9;
         }
+        
+        select {
+            padding: 0.5rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 1rem;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -257,8 +341,8 @@
             <h2 class="section-title">评论列表</h2>
             <div>
                 <form method="GET" style="display: inline;">
-                    <label>
-                        <select name="status" onchange="this.form.submit()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-right: 1rem;">
+                    <label for="statusSelect">
+                        <select name="status" id="statusSelect" onchange="this.form.submit()" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 4px; margin-right: 1rem; font-size: 0.9rem;">
                             <option value="">所有状态</option>
                             <option value="approved" th:selected="${status != null and status == 'approved'}">已审核</option>
                             <option value="pending" th:selected="${status != null and status == 'pending'}">待审核</option>
@@ -293,9 +377,7 @@
                     </tr>
                     <tr th:each="comment : ${comments}">
                         <td class="checkbox-column">
-                            <label>
-                                <input type="checkbox" name="ids" th:value="${comment.id}">
-                            </label>
+                            <input type="checkbox" name="ids" th:value="${comment.id}">
                         </td>
                         <td th:text="${comment.id}">1</td>
                         <td th:text="${comment.postName ?: '未知文章'}">1</td>
