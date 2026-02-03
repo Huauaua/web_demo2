@@ -5,319 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>评论管理 - 后台管理</title>
     <link rel="stylesheet" th:href="@{/index.css}">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        
-        .admin-header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .admin-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .admin-nav {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            padding: 1rem;
-        }
-        
-        .admin-nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .admin-nav li {
-            display: inline;
-        }
-        
-        .admin-nav a {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        
-        .admin-nav a:hover {
-            background-color: #2980b9;
-        }
-        
-        .section-title {
-            margin-top: 0;
-            color: #2c3e50;
-            border-bottom: 2px solid #ecf0f1;
-            padding-bottom: 0.5rem;
-        }
-        
-        .actions-bar {
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #ecf0f1;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #2c3e50;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-        
-        tr {
-            transition: background-color 0.2s ease;
-        }
-        
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .status-approved {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
-        
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
-        
-        .status-spam {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
-        
-        .comment-content {
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .checkbox-column {
-            width: 40px;
-            text-align: center;
-        }
-        
-        .batch-actions {
-            margin-top: 1rem;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-        }
-        
-        .batch-actions button {
-            margin-right: 0.5rem;
-        }
-        
-        .text-center {
-            text-align: center;
-        }
-        
-        .pagination {
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .btn {
-            width: 110px;
-            margin-bottom: 0.5rem;
-            padding: 0.5rem 0.8rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-        
-        .btn-success {
-            background-color: #2ecc71;
-            color: white;
-        }
-        
-        .btn-danger {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .btn-warning {
-            background-color: #f39c12;
-            color: white;
-        }
-        
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-        
-        /* 分页样式 */
-        .page-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 4px; /* 方形按钮 */
-          background-color: white;
-          color: #2c3e50;
-          border: 1px solid #ddd;
-          cursor: pointer;
-          transition: all 0.3s;
-          box-sizing: border-box; /* 包含边框在内的总尺寸 */
-          font-size: 14px; /* 控制字体大小 */
-          line-height: 1; /* 控制行高，避免字体溢出 */
-          text-decoration: none; /* 移除链接下划线 */
-        }
-        
-        .page-btn:hover {
-          background-color: #3498db;
-          color: white;
-          border-color: #3498db;
-        }
-        
-        .page-btn.active {
-          background-color: #3498db;
-          color: white;
-          border-color: #3498db;
-          border-radius: 4px; /* 保持方形 */
-        }
-        
-        /* 上一页和下一页按钮使用更大的宽度 */
-        .page-btn.nav-btn {
-          width: auto;
-          min-width: 80px;
-          padding: 0 12px;
-        }
-        
-        /* 特别针对页码链接的样式 */
-        .pagination a.page-btn,
-        .pagination span.page-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          overflow: hidden;
-          flex-shrink: 0; /* 防止按钮被压缩 */
-        }
-        
-        .pagination-info {
-          margin-left: 15px;
-          margin-right: 15px;
-          color: #7f8c8d;
-          font-size: 0.9rem;
-          display: inline-block;
-          align-self: center;
-        }
-        
-        .pagination-jump {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          align-self: center;
-        }
-        
-        .pagination-jump input {
-          width: 60px;
-          padding: 6px 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          font-size: 0.9rem;
-        }
-        
-        .pagination-jump button {
-          padding: 6px 12px;
-          background-color: #3498db;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 0.9rem;
-        }
-        
-        .pagination-jump button:hover {
-          background-color: #2980b9;
-        }
-        
-        select {
-            padding: 0.5rem;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            margin-right: 1rem;
-            font-size: 0.9rem;
-            transition: border-color 0.3s;
-        }
-        
-        select:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-    </style>
+
 </head>
 <body>
     <header class="admin-header">
@@ -342,7 +30,7 @@
             <div>
                 <form method="GET" style="display: inline;">
                     <label for="statusSelect">
-                        <select name="status" id="statusSelect" onchange="this.form.submit()" style="padding: 0.5rem; border: 2px solid #ddd; border-radius: 4px; margin-right: 1rem; font-size: 0.9rem;">
+                        <select name="status" id="statusSelect" onchange="this.form.submit()" class="select-box">
                             <option value="">所有状态</option>
                             <option value="approved" th:selected="${status != null and status == 'approved'}">已审核</option>
                             <option value="pending" th:selected="${status != null and status == 'pending'}">待审核</option>
@@ -354,21 +42,21 @@
         </div>
         
         <form method="post" th:action="@{/admin/comments/batch/delete}" id="batchForm">
-            <table>
+            <table class="admin-table">
                 <thead>
                     <tr>
                         <th class="checkbox-column">
-                            <label for="selectAll"></label><input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
+                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
                         </th>
-                        <th>ID</th>
-                        <th>文章标题</th>
-                        <th>评论者</th>
-                        <th>邮箱</th>
-                        <th>网站</th>
-                        <th>内容</th>
-                        <th>状态</th>
-                        <th>时间</th>
-                        <th>操作</th>
+                        <th>ID<span class="resize-handle"></span></th>
+                        <th>文章标题<span class="resize-handle"></span></th>
+                        <th>评论者<span class="resize-handle"></span></th>
+                        <th>邮箱<span class="resize-handle"></span></th>
+                        <th>网站<span class="resize-handle"></span></th>
+                        <th>内容<span class="resize-handle"></span></th>
+                        <th>状态<span class="resize-handle"></span></th>
+                        <th>时间<span class="resize-handle"></span></th>
+                        <th>操作<span class="resize-handle"></span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -522,6 +210,40 @@
         document.getElementById('jumpPage')?.addEventListener('keypress', function(e) {
           if (e.key === 'Enter') {
             jumpToPage();
+          }
+        });
+        
+        // 实现行宽调整功能
+        document.addEventListener('DOMContentLoaded', function() {
+          const table = document.querySelector('.admin-table');
+          const headers = table.querySelectorAll('th');
+          
+          headers.forEach(header => {
+            const resizeHandle = header.querySelector('.resize-handle');
+            if (resizeHandle) {
+              resizeHandle.addEventListener('mousedown', initResize);
+            }
+          });
+          
+          function initResize(e) {
+            e.preventDefault();
+            const th = this.parentElement;
+            const table = th.closest('table');
+            const startX = e.clientX;
+            const startWidth = th.offsetWidth;
+            
+            document.documentElement.addEventListener('mousemove', doDrag);
+            document.documentElement.addEventListener('mouseup', stopDrag);
+            
+            function doDrag(e) {
+              const newWidth = startWidth + (e.clientX - startX);
+              th.style.width = newWidth + 'px';
+            }
+            
+            function stopDrag() {
+              document.documentElement.removeEventListener('mousemove', doDrag);
+              document.documentElement.removeEventListener('mouseup', stopDrag);
+            }
           }
         });
     </script>
