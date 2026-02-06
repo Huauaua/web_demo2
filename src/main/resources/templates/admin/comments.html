@@ -212,40 +212,6 @@
             jumpToPage();
           }
         });
-        
-        // 实现行宽调整功能
-        document.addEventListener('DOMContentLoaded', function() {
-          const table = document.querySelector('.admin-table');
-          const headers = table.querySelectorAll('th');
-          
-          headers.forEach(header => {
-            const resizeHandle = header.querySelector('.resize-handle');
-            if (resizeHandle) {
-              resizeHandle.addEventListener('mousedown', initResize);
-            }
-          });
-          
-          function initResize(e) {
-            e.preventDefault();
-            const th = this.parentElement;
-            const table = th.closest('table');
-            const startX = e.clientX;
-            const startWidth = th.offsetWidth;
-            
-            document.documentElement.addEventListener('mousemove', doDrag);
-            document.documentElement.addEventListener('mouseup', stopDrag);
-            
-            function doDrag(e) {
-              const newWidth = startWidth + (e.clientX - startX);
-              th.style.width = newWidth + 'px';
-            }
-            
-            function stopDrag() {
-              document.documentElement.removeEventListener('mousemove', doDrag);
-              document.documentElement.removeEventListener('mouseup', stopDrag);
-            }
-          }
-        });
     </script>
 </body>
 </html>
