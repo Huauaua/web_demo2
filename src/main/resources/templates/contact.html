@@ -536,3 +536,110 @@
         </div>
     </div>
 </footer>
+    
+    <script>
+        // 处理表单提交
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            const category = document.getElementById('category').value;
+            
+            // 基本验证
+            if (!name || !email || !subject || !message) {
+                alert('请填写所有必填字段！');
+                return;
+            }
+            
+            // 简单邮箱格式验证
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('请输入有效的邮箱地址！');
+                return;
+            }
+            
+            // 禁用提交按钮防止重复提交
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = '发送中...';
+            
+            // 发送AJAX请求
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('subject', subject);
+            formData.append('message', message);
+            if (category) {
+                formData.append('category', category);
+            }
+            
+            fetch('/contact', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'success') {
+                    // 清空表单
+                    document.getElementById('contactForm').reset();
+                    alert('消息发送成功！我会尽快回复您。');
+                } else {
+                    alert('发送失败，请稍后重试或直接通过邮箱联系我。');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('发送失败，请稍后重试或直接通过邮箱联系我。');
+            })
+            .finally(() => {
+                // 恢复提交按钮
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            });
+        });
+        
+        // FAQ切换功能
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                const answer = faqItem.querySelector('.faq-answer');
+                const isOpen = faqItem.classList.contains('active');
+                
+                // 关闭所有其他FAQ项
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                    item.querySelector('.faq-answer').style.maxHeight = '0';
+                    item.querySelector('.faq-answer').style.padding = '0 25px';
+                });
+                
+                // 如果当前项不是已经打开的，则打开它
+                if (!isOpen) {
+                    faqItem.classList.add('active');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    answer.style.padding = '25px';
+                }
+            });
+        });
+        
+        // 移动端菜单切换
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        });
+        
+        // 点击菜单外关闭移动端菜单
+        document.addEventListener('click', function(e) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
