@@ -246,4 +246,9 @@ contact.email.from=sender@example.com
 QQ：1775778681
 如有兴趣交流经验，请加本人QQ。
 
-##截图展示
+## 截图展示
+<img width="2208" height="1309" alt="home" src="https://github.com/user-attachments/assets/81c718a0-0b47-4361-8266-9b8eb3193b26" />
+<img width="2189" height="1325" alt="2" src="https://github.com/user-attachments/assets/4a8dd291-a689-4f1a-99d1-74716ef4642e" />
+<img width="2189" height="1311" alt="3" src="https://github.com/user-attachments/assets/c9fc8222-a985-41ed-a7f4-18aa6707edce" />
+<img width="2094" height="1315" alt="4" src="https://github.com/user-attachments/assets/8ccd3856-9086-413b-8710-9a8f701af7c6" />
+<img width="2198" height="1312" alt="5" src="https://github.com/user-attachments/assets/e7173d21-b37e-429f-b6ba-f85997003652" />
